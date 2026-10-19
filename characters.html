@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>角色介绍 · 【铭刻】的存录</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+            color: #eee;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* 顶部标题 */
+        header {
+            text-align: center;
+            padding: 30px 20px 20px;
+        }
+
+        header h1 {
+            font-size: 2em;
+            color: #00d4ff;
+            letter-spacing: 4px;
+            text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+            margin-bottom: 10px;
+        }
+
+        header p {
+            color: #00d4ff;
+            font-size: 0.95em;
+            letter-spacing: 2px;
+        }
+
+        /* 返回首页 */
+        .back-home {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 8px 20px;
+            border: 1px solid rgba(0, 212, 255, 0.5);
+            border-radius: 20px;
+            color: #00d4ff;
+            text-decoration: none;
+            font-size: 0.9em;
+            transition: all 0.3s;
+        }
+
+        .back-home:hover {
+            background: #00d4ff;
+            color: #1a1a2e;
+        }
+
+        /* 主体布局：左列表 + 右内容 */
+        .container {
+            max-width: 1100px;
+            margin: 30px auto;
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+
+        /* 左侧国家列表 */
+        .country-list {
+            flex: 0 0 200px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            position: sticky;
+            top: 20px;
+        }
+
+        .country-list h2 {
+            color: #00d4ff;
+            font-size: 1.1em;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+            padding-left: 8px;
+            border-left: 3px solid #00d4ff;
+        }
+
+        .country-btn {
+            text-align: left;
+            padding: 14px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 10px;
+            color: #c8d0e7;
+            font-size: 0.95em;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .country-btn:hover {
+            border-color: #00d4ff;
+            color: #00d4ff;
+            transform: translateX(4px);
+        }
+
+        .country-btn.active {
+            background: #00d4ff;
+            color: #1a1a2e;
+            font-weight: bold;
+            border-color: #00d4ff;
+            box-shadow: 0 4px 15px rgba(0, 212, 255, 0.4);
+        }
+
+        /* 右侧角色展示区 */
+        .character-area {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .country-title {
+            color: #00d4ff;
+            font-size: 1.5em;
+            letter-spacing: 3px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(0, 212, 255, 0.3);
+        }
+
+        .character-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        /* 单个角色卡片 */
+        .character-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 212, 255, 0.25);
+            border-radius: 14px;
+            overflow: hidden;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+        }
+
+        .character-card:hover {
+            transform: translateY(-5px);
+            border-color: #00d4ff;
+            box-shadow: 0 10px 25px rgba(0, 212, 255, 0.3);
+        }
+
+        .character-card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            display: block;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .character-card .info {
+            padding: 15px;
+        }
+
+        .character-card h3 {
+            color: #00d4ff;
+            font-size: 1.1em;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+
+        .character-card p {
+            color: #c8d0e7;
+            font-size: 0.85em;
+            line-height: 1.6;
+        }
+
+        /* 手机适配：左右改成上下 */
+        @media (max-width: 700px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .country-list {
+                flex: none;
+                width: 100%;
+                position: static;
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+
+            .country-list h2 {
+                width: 100%;
+            }
+
+            .country-btn {
+                flex: 1 1 auto;
+                text-align: center;
+            }
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: #6b7280;
+            font-size: 0.85em;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>角色介绍</h1>
+        <p>—— 各个国家的居民们 ——</p>
+        <a href="index.html" class="back-home">← 返回首页</a>
+    </header>
+
+    <div class="container">
+
+        <!-- 左侧：国家列表 -->
+        <aside class="country-list">
+            <h2>国家</h2>
+            <button class="country-btn active" data-country="country1">瓦莱利亚</button>
+            <button class="country-btn" data-country="country2"><div style="color: #dc143c;">［未解识］</div>鸿熙</button>
+            <button class="country-btn" data-country="country3"><div style="color: #dc143c;">［未解识］</div>和辉</button>
+            <button class="country-btn" data-country="country4"><div style="color: #dc143c;">［未解识］</div>帕尔玛</button>
+        </aside>
+
+        <!-- 右侧：角色展示 -->
+        <main class="character-area">
+
+            <!-- 国家一 -->
+            <section class="country-content" id="country1">
+                <h2 class="country-title">瓦莱利亚</h2>
+                <div class="character-grid">
+
+                    <a href="角色介绍/塞缪尔·艾柯尼特.html" style="text-decoration: none; display: block;">
+    <div class="character-card">
+        <img src="images/塞缪尔.png" alt="塞缪尔">
+        <div class="info">
+            <h3>塞缪尔·艾柯尼特</h3>
+        </div>
+    </div>
+</a>
+
+                </div>
+            </section>
+
+            <!-- 国家二（默认隐藏） -->
+            
+
+            <!-- 国家三 -->
+            
+
+            <!-- 国家四 -->
+            
+
+        </main>
+    </div>
+
+    <footer>
+        © 2026 【铭刻】的概念 · 保留所有权利
+    </footer>
+    
+    <footer>
+    那些人们，在为生而死。
+    我对此没有意见，毕竟我只是一个记录员。
+    </footer>
+
+    <!-- 切换逻辑 -->
+    <script>
+        const buttons = document.querySelectorAll('.country-btn');
+        const contents = document.querySelectorAll('.country-content');
+
+        buttons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // 1. 按钮高亮切换
+                buttons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // 2. 显示对应内容，隐藏其他
+                const target = btn.dataset.country;
+                contents.forEach(c => {
+                    c.style.display = (c.id === target) ? 'block' : 'none';
+                });
+
+                // 3. 手机上切换后滚回顶部
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        });
+    </script>
+
+</body>
+</html>
