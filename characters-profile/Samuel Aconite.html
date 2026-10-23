@@ -8,378 +8,463 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
-            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
-            color: #eee;
+            /* 整体灰白底色 */
+            background-color: #f0f2f5; 
+            font-family: "Helvetica Neue", "PingFang SC", "Microsoft YaHei", sans-serif;
+            color: #1a1d20;
             min-height: 100vh;
-            padding: 20px;
         }
 
-        header {
+        /* ==========================================
+           上半部分：黑色档案区
+           ========================================== */
+        .dark-top {
+            background-color: #121418;
+            padding: 50px 20px 80px;
+            clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
+            position: relative;
+            z-index: 1;
+            border-bottom: 2px solid #00d4ff;
             text-align: center;
-            padding: 30px 20px 20px;
         }
 
         header h1 {
-            font-size: 2em;
-            color: #00d4ff;
-            letter-spacing: 4px;
-            text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
-            margin-bottom: 10px;
+            font-size: 1.8em;
+            font-weight: 300;
+            color: #ffffff;
+            letter-spacing: 8px;
+            margin-bottom: 15px;
+        }
+
+        header p {
+            color: #8892a0;
+            font-size: 0.95em;
+            letter-spacing: 3px;
+            margin-bottom: 25px;
         }
 
         .back-home {
             display: inline-block;
-            margin-top: 15px;
-            padding: 8px 20px;
-            border: 1px solid rgba(0, 212, 255, 0.5);
-            border-radius: 20px;
-            color: #00d4ff;
+            padding: 8px 24px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #c8d0e7;
             text-decoration: none;
-            font-size: 0.9em;
+            font-size: 0.85em;
+            letter-spacing: 2px;
             transition: all 0.3s;
-        }
-        .back-home:hover { background: #00d4ff; color: #1a1a2e; }
-
-        /* 详情卡片主容器 */
-        .profile-container {
-            max-width: 800px;
-            margin: 30px auto;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(0, 212, 255, 0.25);
-            border-radius: 16px;
-            padding: 40px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+            margin-bottom: 30px;
         }
 
-        /* 头像区域 */
-        .avatar-box {
-            width: 180px;
-            height: 180px;
-            margin: 0 auto 25px;
-            border-radius: 50%;
-            border: 3px solid #00d4ff;
-            box-shadow: 0 0 30px rgba(0, 212, 255, 0.4);
-            overflow: hidden;
-            background: rgba(0, 0, 0, 0.3);
+        .back-home:hover {
+            background: #ffffff;
+            color: #121418;
+            border-color: #ffffff;
         }
 
-        .avatar-box img {
+        /* 方形头像框 */
+        .avatar-wrap {
+            width: 160px;
+            height: 160px;
+            margin: 0 auto 30px;
+            position: relative;
+        }
+
+        .avatar-wrap img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            border: 1px solid #333;
+            filter: grayscale(20%) contrast(110%);
         }
 
-        /* 名字与称号 */
+        /* 左下角青蓝装饰角 */
+        .avatar-wrap::before {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: -10px;
+            width: 40px;
+            height: 40px;
+            border-bottom: 2px solid #00d4ff;
+            border-left: 2px solid #00d4ff;
+            z-index: 2;
+        }
+
+        /* 名字与称号 - 放在黑底区域，确保清晰可见 */
         .char-name {
             text-align: center;
-            font-size: 2em;
-            color: #00d4ff;
-            letter-spacing: 3px;
+            font-size: 2.2em;
+            color: #ffffff; /* 纯白，在黑底上清晰 */
+            font-weight: 300;
+            letter-spacing: 4px;
             margin-bottom: 10px;
         }
 
         .char-title {
             text-align: center;
-            color: #8fa8b8;
-            font-size: 0.95em;
-            letter-spacing: 2px;
-            margin-bottom: 20px;
+            color: #00d4ff; /* 青蓝英文名 */
+            font-size: 1em;
+            letter-spacing: 4px;
+            font-weight: 300;
         }
 
-        /* 分割线 */
-        .divider {
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.6), transparent);
-            margin: 30px auto;
-            width: 80%;
+        /* ==========================================
+           下半部分：灰白档案区
+           ========================================== */
+        .profile-container {
+            max-width: 850px;
+            margin: -40px auto 40px; /* 向上提，压住黑底边缘 */
+            position: relative;
+            z-index: 2;
+            padding: 0 20px;
         }
 
-        /* 信息表格 */
+        /* 详情卡片（白底） */
+        .info-card {
+            background: #ffffff;
+            border: 1px solid #e1e5eb;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+
+        /* 极简表格 */
         .info-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 10px;
+        }
+
+        .info-table tr {
+            border-bottom: 1px solid #f0f2f5;
+        }
+
+        .info-table tr:last-child {
+            border-bottom: none;
         }
 
         .info-table td {
-            padding: 15px 10px;
-            border-bottom: 1px dashed rgba(0, 212, 255, 0.2);
-            line-height: 1.7;
-        }
-
-        .info-table td:first-child {
-            width: 120px;
-            color: #00d4ff;
-            font-weight: bold;
-            letter-spacing: 1px;
+            padding: 18px 10px;
+            line-height: 1.9;
             vertical-align: top;
         }
 
-        .info-table td:last-child {
-            color: #c8d0e7;
+        .info-table td:first-child {
+            width: 130px;
+            color: #00a8cc;
+            font-weight: 600;
+            letter-spacing: 1px;
             font-size: 0.95em;
+        }
+
+        .info-table td:last-child {
+            color: #4a5568;
+            font-size: 0.95em;
+            text-align: justify;
+        }
+
+        /* 表格里的段落 */
+        .info-table td p {
+            margin-bottom: 10px;
+        }
+        .info-table td p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* ==========================================
+           角色评价区
+           ========================================== */
+        .review-section {
+            background: #ffffff;
+            border: 1px solid #e1e5eb;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .review-section h3 {
+            color: #1a1d20;
+            font-size: 1.2em;
+            font-weight: 600;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f2f5;
+            display: flex;
+            align-items: center;
+        }
+
+        .review-section h3::before {
+            content: "";
+            display: inline-block;
+            width: 6px;
+            height: 18px;
+            background: #00a8cc;
+            margin-right: 12px;
+        }
+
+        /* 单条评价卡片 */
+        .review-card {
+            background: #f8fafb;
+            border-left: 3px solid #00a8cc;
+            padding: 25px;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+
+        .review-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .review-card:hover {
+            background: #ffffff;
+            border-left-color: #1a1d20;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        /* 评价者名字 */
+        .review-author {
+            color: #1a1d20;
+            font-weight: 600;
+            font-size: 0.95em;
+            margin-bottom: 12px;
+            letter-spacing: 1px;
+        }
+
+        /* 评价内容 */
+        .review-text {
+            color: #4a5568;
+            font-size: 0.95em;
+            line-height: 2;
+            text-align: justify;
+        }
+
+        /* 引号装饰 */
+        .review-text::before { content: "「"; color: #00a8cc; font-weight: bold; }
+        .review-text::after { content: "」"; color: #00a8cc; font-weight: bold; }
+
+        /* ==========================================
+           底部
+           ========================================== */
+        .light-bottom {
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        footer {
+            text-align: center;
+            color: #8892a0;
+            font-size: 0.85em;
+            line-height: 2;
+            padding: 20px 0 40px;
+            border-top: 1px solid #d1d9e0;
         }
 
         /* 手机适配 */
         @media (max-width: 600px) {
-            .profile-container { padding: 25px 20px; }
-            .avatar-box { width: 140px; height: 140px; }
-            .char-name { font-size: 1.6em; }
-            .info-table td:first-child { width: 90px; font-size: 0.9em; }
-        }
-        
-        /* ============ 角色评价卡片 ============ */
-.review-section {
-    margin-top: 40px;
-}
-
-.review-section h3 {
-    color: #00d4ff;
-    font-size: 1.2em;
-    letter-spacing: 2px;
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-}
-
-/* 标题前面的小竖线 */
-.review-section h3::before {
-    content: "";
-    display: inline-block;
-    width: 4px;
-    height: 18px;
-    background: #00d4ff;
-    border-radius: 2px;
-    margin-right: 10px;
-}
-
-/* 单条评价卡片 */
-.review-card {
-    background: rgba(0, 212, 255, 0.05);
-    border-left: 3px solid rgba(0, 212, 255, 0.5);
-    border-radius: 0 10px 10px 0;
-    padding: 20px;
-    margin-bottom: 15px;
-    transition: all 0.3s;
-}
-
-.review-card:hover {
-    background: rgba(0, 212, 255, 0.1);
-    transform: translateX(5px);
-    border-left-color: #00d4ff;
-    box-shadow: 0 5px 15px rgba(0, 212, 255, 0.15);
-}
-
-/* 评价者名字 */
-.review-author {
-    color: #00d4ff;
-    font-weight: bold;
-    font-size: 0.95em;
-    margin-bottom: 8px;
-    letter-spacing: 1px;
-}
-
-/* 评价内容 */
-.review-text {
-    color: #c8d0e7;
-    font-size: 0.92em;
-    line-height: 1.8;
-    font-style: italic; /* 斜体，表示是引用的话语 */
-}
-
-/* 引号装饰 */
-.review-text::before { content: "「"; color: rgba(0, 212, 255, 0.5); }
-.review-text::after { content: "」"; color: rgba(0, 212, 255, 0.5); }
-
-        footer {
-            text-align: center;
-            padding: 30px;
-            color: #6b7280;
-            font-size: 0.85em;
-            line-height: 1.8;
+            .avatar-wrap { width: 130px; height: 130px; }
+            .char-name { font-size: 1.8em; }
+            .info-card, .review-section { padding: 25px 20px; }
+            .info-table td:first-child { width: 90px; font-size: 0.85em; }
+            .info-table td:last-child { font-size: 0.9em; }
+            .info-table td { padding: 15px 5px; }
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>角色档案</h1>
-        <p>Character Profile</p>
-        <a href="../characters.html" class="back-home">← 返回角色列表</a>
-    </header>
+    <!-- 上半部黑底 -->
+    <div class="dark-top">
+        <header>
+            <h1>角色档案</h1>
+            <p>Character Profile</p>
+            <a href="../characters.html" class="back-home">← 返回角色列表</a>
+        </header>
 
-    <div class="profile-container">
-
-        <!-- 头像框 -->
-        <div class="avatar-box">
+        <div class="avatar-wrap">
             <img src="../images/塞缪尔.png" alt="塞缪尔">
         </div>
 
-        <!-- 名字与身份 -->
+        <!-- 名字移到了黑底上，纯白显示 -->
         <h2 class="char-name">塞缪尔·艾柯尼特</h2>
         <div class="char-title">Samuel Aconite</div>
+    </div>
 
-        <!-- 分割线 -->
-        <div class="divider"></div>
-
+    <!-- 下半部内容 -->
+    <div class="profile-container">
+        
         <!-- 详细信息表格 -->
-        <table class="info-table">
-            <tr>
-                <td>姓名</td>
-                <td>塞缪尔·艾柯尼特 (Samuel Aconite)</td>
-            </tr>
-            <tr>
-                <td>性别</td>
-                <td>男</td>
-            </tr>
-            <tr>
-                <td>年龄</td>
-                <td>25岁</td>
-            </tr>
-            <tr>
-                <td>种族</td>
-                <td>奈亚迪</td>
-            </tr>
-            <tr>
-                <td>身份</td>
-                <td>艾柯尼特代理家主助理</td>
-            </tr>
-            <tr>
-                <td>生日</td>
-                <td>1/5</td>
-            </tr>
-            <tr>
-                <td>势力/阵营</td>
-                <td><p>艾柯尼特(斯诺瓦代表家族)</p>
-                <p>源于【死亡】的组织（合作者）</p></td>
-            </tr>
-            <tr>
-                <td>国籍/出身地</td>
-                <td>瓦莱利亚-斯诺瓦 </td>
-            </tr>
-            <tr>
-                <td>喜爱的事物</td>
-                <td><p>味道明显的食物、黑咖啡、浓茶、纯度高的黑巧克力、草莓蛋糕、家人亲手做的食物、炖菜、浓汤、烤面包、热牛奶；</p>
-                <p>安静的角落、枪械保养、精确的日程表、秩序、观察人类。</p></td>
-            </tr>
-            <tr>
-                <td>讨厌的事物</td>
-                <td><p>陌生的食物、味道淡的食物；</p>
-                <p>阿奇伯德、不可控的变数、艺术相关的事物（不是没兴趣，只是发自内心理解不了）、被过度关注、循环的记忆、浪费食物的人、被关心（压力会更大）。</p></td>
-            </tr>
-            <tr>
-                <td>害怕的事物</td>
-                <td>循环本身、无力感、被人看穿、循环无法结束。</td>
-            </tr>
-            <tr>
-                <td>爱好</td>
-                <td>枪械相关、写极简观察笔记、找规律、拆装与修理小物件、叠东西、手冲咖啡、收集苦味零食、一个人散步、听人吵架（但不参与）、（他自己也没意识到的）给艾薇拉收拾烂摊子。</td>
-            </tr>
-            <tr>
-                <td>武器/术式相关能力测量</td>
-                <td><p>塞缪尔的常用武器是定制中口径栓动步枪与两把半自动手枪。</p><br>
-                <p>射击精度：远距离静止靶成绩优异，中近距离移动靶稳定在优良区间。</p>
-<p>枪械维护与改装：具备独立拆解、保养、调校和轻度改装能力，对每一把常用枪械建立完整使用记录，武器故障率极低。</p>
-<p>战术意识：擅长预先规划射击位置、撤退路线和弹药分配，习惯在行动前把可控变量压到最少。</p>
-<p>心理素质：实战压力下手稳、节奏不乱，但某些情境中会出现明显的决策激进倾向，需注意。</p>
-<p>术式对抗短板：不会使用术式，面对法术型对手时高度依赖距离控制、掩体和先手，缺乏正面反制手段。</p>
-<p>总体评价：非术士型战斗人员中的高水平枪械专精者，精度、维护、战术规划三项突出，近身混战与法术对抗为明确短板。</p>
-<p>塞缪尔·艾柯尼特是一名以精准射击、武器维护和战术预判见长的枪械专精者。他的强项在于把可控的事情做到极致，短板则集中在法术对抗和近身混战。官方建议：发挥其远程与规划优势，避免令其在无掩护条件下正面应对法术型目标；涉及某些情况时需额外评估其行动激进程度。</p></td>
-            </tr>
-            <tr>
-                <td>其他补充1</td>
-                <td><p>190的身高在奈亚迪里算显眼（不过对瓦莱利亚人来说算正常），但他习惯含一点肩、走路贴边，视觉上把自己“缩”小一截。体能不错，但不算爆发型，优势在耐力和稳定输出。</p><br>
-<p>睡眠质量差，常半夜醒来检查门窗和枪。白天靠黑咖啡硬撑，眼下偶尔有遮不住的淡青，会稍微用头发挡一下。</p><br>
-<p>手很稳，拆弹匣、拧螺丝、端枪都不抖。唯一会手指发紧的场合是家人突然失联。</p><br>
-<p>对外形象是“温和有礼、话不多、记性好”的年轻人。记住别人随口提过的小事是他刻意经营的社交手段，成本低、回报高。</p><br>
-<p>真正放松的社交对象极少，艾薇拉和多里安表兄算两个，其余家人算半个。其余场合全程处于“观察模式”，笑容标准、回应及时、但不主动延伸话题。</p><br>
-<p>和阿奇伯德“聊天”时语气轻柔、用词客气，旁人听不出攻击性，只有当事人和阿奇伯德自己知道话里带刺。</p>
-</tr>
-<tr>
-  <td>其他补充2</td>
-<td><p>成绩好靠的是规划和方法，不是天赋型选手。擅长整理、归纳、找规律，考试前会把所有知识点压成几张自用表格。</p><br>
-<p>知识面偏实用：弹道学、机械原理、基础药理（为了处理伤口）、地图与路线记忆。对文学、艺术、音乐理论完全无感，上课被点名赏析作品时会礼貌地给出“很规整”之类的敷衍评价。</p><br>
-<p>不会术式这件事他私下查过资料、做过尝试，确认无解后就不再纠结，转而把精力全投到枪上。</p></td>
-</tr>
-<tr>
-  <td>其他补充3</td>
-<td><p>家人出门前会“顺口”问路线和时间，实际是在脑内建行程表。超时未归，先打电话，打不通就出门找，表面平静，脑子已经在过各种坏情况。</p><br>
-<p>家里每个人的常用药、过敏史、血型他都记着，急救包定期检查更换，从不说“我关心你”，只做事。</p><br>
-<p>对“家人”的定义收得很紧，圈内人犯错他会收拾烂摊子然后冷脸说几句，圈外人碰家人一下，他会笑着让对方知道什么叫不留情面。</p></td>
-</tr>
-<tr>
-<td>其他补充4</td>
-<td><p>偶尔对某个场景产生强烈既视感，会短暂停顿一两秒，然后若无其事继续。被问就说“走神了”。</p><br>
-<p>记性异常好，好到有时让人不舒服——几年前某天某人说过的一句话他能原样复述。他自己知道这是被逼出来的，不觉得是优点。</p><br>
-<p>对“重复的日常”有矛盾心理：既依赖规律带来的安全感，又会在某个瞬间突然厌烦，然后独自去靶场待一下午。</p></td>
-</tr>
-<tr>
-<td>其他补充5</td>
-<td><p>花钱克制。个人物品少而耐用，衣服色调偏暗，方便降低存在感。</p><br>
-<p>不囤无用的东西，但弹药永远多备一份。他说“多一份不会亏，少一份会死人”，语气不像开玩笑。</p><br>
-<p>对别人的礼物会认真收好，哪怕用不上也不扔，放在抽屉深处，偶尔翻出来看一眼。</p></td>
-</tr>
-<tr>
-<td>其他补充6</td>
-<td><p>太习惯“降低存在感”，导致真正需要他站出来表态时，第一反应仍是往后退半步，事后会为此自责。</p><br>
-<p>和阿奇伯德“聊天”时偶尔收不住，话比预想的刻薄，事后会短暂反省，但下次照旧。</p></br>
-<p>从不主动求助，压力大到临界点也只是擦枪频率变高、笑容更标准。周围人若不够敏锐，很难发现他已经在硬撑。</p></td>
-            </tr>
-        </table>
+        <div class="info-card">
+            <table class="info-table">
+                <tr>
+                    <td>姓名</td>
+                    <td>塞缪尔·艾柯尼特 (Samuel Aconite)</td>
+                </tr>
+                <tr>
+                    <td>性别</td>
+                    <td>男</td>
+                </tr>
+                <tr>
+                    <td>年龄</td>
+                    <td>25岁</td>
+                </tr>
+                <tr>
+                    <td>种族</td>
+                    <td>奈亚迪</td>
+                </tr>
+                <tr>
+                    <td>身份</td>
+                    <td>艾柯尼特代理家主助理</td>
+                </tr>
+                <tr>
+                    <td>生日</td>
+                    <td>1/5</td>
+                </tr>
+                <tr>
+                    <td>势力/阵营</td>
+                    <td>
+                        <p>艾柯尼特(斯诺瓦代表家族)</p>
+                        <p>源于【死亡】的组织（合作者）</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>国籍/出身地</td>
+                    <td>瓦莱利亚-斯诺瓦 </td>
+                </tr>
+                <tr>
+                    <td>喜爱的事物</td>
+                    <td>
+                        <p>味道明显的食物、黑咖啡、浓茶、纯度高的黑巧克力、草莓蛋糕、家人亲手做的食物、炖菜、浓汤、烤面包、热牛奶；</p>
+                        <p>安静的角落、枪械保养、精确的日程表、秩序、观察人类。</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>讨厌的事物</td>
+                    <td>
+                        <p>陌生的食物、味道淡的食物；</p>
+                        <p>阿奇伯德、不可控的变数、艺术相关的事物（不是没兴趣，只是发自内心理解不了）、被过度关注、循环的记忆、浪费食物的人、被关心（压力会更大）。</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>害怕的事物</td>
+                    <td>循环本身、无力感、被人看穿、循环无法结束。</td>
+                </tr>
+                <tr>
+                    <td>爱好</td>
+                    <td>枪械相关、写极简观察笔记、找规律、拆装与修理小物件、叠东西、手冲咖啡、收集苦味零食、一个人散步、听人吵架（但不参与）、（他自己也没意识到的）给艾薇拉收拾烂摊子。</td>
+                </tr>
+                <tr>
+                    <td>武器/术式相关能力测量</td>
+                    <td>
+                        <p>塞缪尔的常用武器是定制中口径栓动步枪与两把半自动手枪。</p><br>
+                        <p>射击精度：远距离静止靶成绩优异，中近距离移动靶稳定在优良区间。</p>
+                        <p>枪械维护与改装：具备独立拆解、保养、调校和轻度改装能力，对每一把常用枪械建立完整使用记录，武器故障率极低。</p>
+                        <p>战术意识：擅长预先规划射击位置、撤退路线和弹药分配，习惯在行动前把可控变量压到最少。</p>
+                        <p>心理素质：实战压力下手稳、节奏不乱，但某些情境中会出现明显的决策激进倾向，需注意。</p>
+                        <p>术式对抗短板：不会使用术式，面对法术型对手时高度依赖距离控制、掩体和先手，缺乏正面反制手段。</p>
+                        <p>总体评价：非术士型战斗人员中的高水平枪械专精者，精度、维护、战术规划三项突出，近身混战与法术对抗为明确短板。</p>
+                        <p>塞缪尔·艾柯尼特是一名以精准射击、武器维护和战术预判见长的枪械专精者。他的强项在于把可控的事情做到极致，短板则集中在法术对抗和近身混战。官方建议：发挥其远程与规划优势，避免令其在无掩护条件下正面应对法术型目标；涉及某些情况时需额外评估其行动激进程度。</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>有关自身</td>
+                    <td>
+                        <p>190的身高在奈亚迪里算显眼（不过对瓦莱利亚人来说算正常），但他习惯含一点肩、走路贴边，视觉上把自己“缩”小一截。体能不错，但不算爆发型，优势在耐力和稳定输出。</p><br>
+                        <p>睡眠质量差，常半夜醒来检查门窗和枪。白天靠黑咖啡硬撑，眼下偶尔有遮不住的淡青，会稍微用头发挡一下。</p><br>
+                        <p>手很稳，拆弹匣、拧螺丝、端枪都不抖。</p><br>
+                        <p>对外形象是“温和有礼、话不多、记性好”的年轻人。记住别人随口提过的小事是他刻意经营的社交手段，成本低、回报高。</p><br>
+                        <p>真正放松的社交对象极少，艾薇拉和多里安表兄算两个，其余家人算半个。其余场合全程处于“观察模式”，笑容标准、回应及时、但不主动延伸话题。</p><br>
+                        <p>和阿奇伯德“聊天”时语气轻柔、用词客气，旁人听不出攻击性，只有当事人和阿奇伯德自己知道话里带刺。</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>有关学习</td>
+                    <td>
+                        <p>成绩好靠的是规划和方法，不是天赋型选手。擅长整理、归纳、找规律，考试前会把所有知识点压成几张自用表格。</p><br>
+                        <p>知识面偏实用：弹道学、机械原理、基础药理（为了处理伤口）、地图与路线记忆。但对文学、艺术、音乐理论完全无感，上课被点名赏析作品时会礼貌地给出“很规整、真是佳作、非常完美”之类的敷衍评价。</p><br>
+                        <p>不会术式这件事他私下查过资料、做过尝试，确认无解后就不再纠结，转而把精力全投到枪上——毕竟学不会的还没办法学的确没有深究的必要。</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>有关家人</td>
+                    <td>
+                        <p>家人出门前他会“顺口”问路线和时间，实际是在脑内建行程表。超时未归，先打电话，打不通就出门找，表面平静，脑子已经在过各种坏情况。原因不明，似乎是对非行程之外的未知情况有应激反应。</p><br>
+                        <p>家里每个人的常用药、过敏史、血型他都记着，急救包定期检查更换，从没告诉过其他人，只做事。</p><br>
+                        <p>对“家人”的定义收得很紧，目前这个定义内包含的人未知。</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>有关心理</td>
+                    <td>
+                        <p>偶尔对某个场景产生强烈既视感，会短暂停顿一两秒，然后若无其事继续。被问到就回答“走神了”。</p><br>
+                        <p>记性异常好，好到有时让人不舒服——几年前某天某人说过的一句话他能原样复述。他自己知道这是被逼出来的，不觉得是优点。</p><br>
+                        <p>对“重复的日常”有矛盾心理：既依赖规律带来的安全感，又会在某个瞬间突然厌烦，然后独自去靶场待一下午。</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>有关事物</td>
+                    <td>
+                        <p>花钱克制。个人物品少而耐用，大部分衣服色调偏暗，方便降低存在感。（小部分是艾薇拉送的、颜色鲜艳的礼服）</p><br>
+                        <p>不囤无用的东西，但弹药永远多备一份。他曾说“多一份不会亏，少一份会死人”，语气不像开玩笑。即使本家的成员每人都有一位侍卫，但他依旧会随身携带弹药。</p><br>
+                        <p>对别人的礼物会认真收好，哪怕用不上也不扔，放在抽屉深处，偶尔翻出来看一眼。会按时间顺序排列好。</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>有关习惯</td>
+                    <td>
+                        <p>太习惯“降低存在感”，导致真正需要他站出来表态时，第一反应仍是往后退半步，事后会为此自责。</p><br>
+                        <p>和阿奇伯德“聊天”时偶尔收不住，话比预想的刻薄，事后会短暂反省，但下次照旧。对此阿奇伯德并没有意见（因为希洛的话比他刻薄的多）。</p><br>
+                        <p>从不主动求助，压力大到临界点也只是擦枪频率变高、笑容更标准————这是他的侍卫发现的习惯。</p>
+                    </td>
+                </tr>
+            </table>
+        </div>
         
         <!-- 角色评价区 -->
-<div class="review-section">
-    <h3>他人看法</h3>
+        <div class="review-section">
+            <h3>他人看法</h3>
 
-    <!-- 评价 1 -->
-    <div class="review-card">
-        <div class="review-author">多里安·艾柯尼特</div>
-        <div class="review-text">
-            堂弟。我能知道他在想什么……少来找我最好。<br>
-            作为学生的时候就已经很优秀，如果是他作为家主的话，我觉得也没什么问题…………但他只是做了我的助理。没想到他和罗丝玛丽一样的…不积极。不过，比起家主，做助理可能更自由一点，也可能更适合他。
-        </div>
-    </div>
+            <div class="review-card">
+                <div class="review-author">多里安·艾柯尼特</div>
+                <div class="review-text">
+                    堂弟。我能知道他在想什么……少来找我最好。<br>
+                    作为学生的时候就已经很优秀，如果是他作为家主的话，我觉得也没什么问题…………但他只是做了我的助理。没想到他和罗丝玛丽一样的…不积极。不过，比起家主，做助理可能更自由一点，也可能更适合他。
+                </div>
+            </div>
 
-    <!-- 评价 2 -->
-    <div class="review-card">
-        <div class="review-author">罗丝玛丽·艾柯尼特</div>
-        <div class="review-text">
-            表弟。眼睛是金色的很漂亮，但像多里安表兄那样的话我会更喜欢。不过似乎总是在烦恼什么，问他也不回答，真是个闷葫芦。<br>
-            难以理解他为什么喜欢苦味的东西，但每个人的口味不一样，所以我偶尔也会给他带点苦东西~再怎么说也是我的表弟。
-        </div>
-    </div>
+            <div class="review-card">
+                <div class="review-author">罗丝玛丽·艾柯尼特</div>
+                <div class="review-text">
+                    表弟。眼睛是金色的很漂亮，但像多里安表兄那样的话我会更喜欢。不过似乎总是在烦恼什么，问他也不回答，真是个闷葫芦。<br>
+                    难以理解他为什么喜欢苦味的东西，但每个人的口味不一样，所以我偶尔也会给他带点苦东西~再怎么说也是我的表弟。
+                </div>
+            </div>
 
-    <!-- 你可以继续复制 .review-card 来添加更多人的评价 -->
-    <div class="review-card">
-        <div class="review-author">艾薇拉·艾柯尼特</div>
-        <div class="review-text">
-            哥哥！世界上最好最厉害的人，很爱很爱大家。每次我闯祸了他就会帮我收拾…嗯……我现在已经成年了！不会闯祸了……大概。<br>
-            超级羡慕他成绩好！啊啊我也想考试的时候能考满分……算了还是及格就好了，我肯定学不进去……不过要是我也能长的像哥那么高就好了————等等、难道吃苦东西就能长那么高吗！？真的吗！？
+            <div class="review-card">
+                <div class="review-author">艾薇拉·艾柯尼特</div>
+                <div class="review-text">
+                    哥哥！世界上最好最厉害的人！每次我闯祸了他就会帮我收拾…嗯……我现在已经成年了！不会闯祸了……大概。<br>
+                    超级羡慕他成绩好！啊啊我也想考试的时候能考满分……算了还是及格就好了，我肯定学不进去……不过要是我也能长的像哥那么高就好了————等等、难道吃苦东西就能长那么高吗！？真的吗！？
+                </div>
+            </div>
+            
+            <div class="review-card">
+                <div class="review-author">格雷尔·艾柯尼特</div>
+                <div class="review-text">
+                    堂兄……虽然平时话很少，但是对我还是很照顾。有时候也会看我写的草稿……虽然挺、挺尴尬的。<br>
+                    我偶尔也会在图书馆禁区见到他……有点惊讶，因为禁区是需要门禁卡和指纹验证才能进去的，我好奇他没有门禁卡和验证是怎么进来的……嗯，说不定是多里安堂兄给他额外开的权限呢。
+                </div>
+            </div>
         </div>
-        </div>
-        
-      <div class="review-card">
-        <div class="review-author">格雷尔·艾柯尼特</div>
-        <div class="review-text">
-            堂兄……虽然平时话很少，但是对我还是很照顾。有时候也会看我写的草稿……虽然挺、挺尴尬的。<br>
-            我偶尔也会在图书馆禁区见到他……有点惊讶，因为禁区是需要门禁卡和指纹验证才能进去的，我好奇他没有门禁卡和验证是怎么进来的……嗯，说不定是多里安堂兄给他额外开的权限呢。
-        </div>
-    </div>
-    </div>
-
-</div>
 
     </div>
 
-    <footer>
-        © 2026 【铭刻】的概念 · 保留所有权利
-    </footer>
-    
-    <footer>
-      塞缪尔……我见过他几次，但都是在和阿奇伯德聊天的时候。说实话……那个气氛真够剑拔弩张的。
-      </footer>
+    <!-- 底部 -->
+    <div class="light-bottom">
+        <footer>
+            © 2026 【铭刻】的概念 · 保留所有权利<br><br>
+            塞缪尔……我见过他几次，但都是在和阿奇伯德聊天的时候。说实话……那个气氛真够剑拔弩张的。
+        </footer>
+    </div>
 
 </body>
 </html>
