@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>种族 · 【铭刻】的存录</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            /* 整体灰白底色 */
+            background-color: #f0f2f5; 
+            font-family: "Helvetica Neue", "PingFang SC", "Microsoft YaHei", sans-serif;
+            color: #1a1d20;
+            min-height: 100vh;
+        }
+
+        /* ==========================================
+           上半部分：黑色标题区
+           ========================================== */
+        .dark-top {
+            background-color: #121418;
+            padding: 50px 20px 60px;
+            clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
+            position: relative;
+            z-index: 1;
+            border-bottom: 2px solid #00d4ff;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2em;
+            font-weight: 300;
+            color: #ffffff;
+            letter-spacing: 8px;
+            margin-bottom: 15px;
+        }
+
+        header p {
+            color: #8892a0;
+            font-size: 0.95em;
+            letter-spacing: 3px;
+            margin-bottom: 25px;
+        }
+
+        .back-home {
+            display: inline-block;
+            padding: 8px 24px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #c8d0e7;
+            text-decoration: none;
+            font-size: 0.85em;
+            letter-spacing: 2px;
+            transition: all 0.3s;
+        }
+
+        .back-home:hover {
+            background: #ffffff;
+            color: #121418;
+            border-color: #ffffff;
+        }
+
+        /* ==========================================
+           主体布局：左列表 + 右内容
+           ========================================== */
+        .container {
+            max-width: 1100px;
+            margin: -30px auto 40px;
+            display: flex;
+            gap: 30px;
+            align-items: flex-start;
+            position: relative;
+            z-index: 2;
+            padding: 0 20px;
+        }
+
+        /* 左侧种族列表 */
+        .race-list {
+            flex: 0 0 200px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            background: #ffffff;
+            border: 1px solid #e1e5eb;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+            position: sticky;
+            top: 20px;
+            max-height: 80vh; /* 防止列表太长超出屏幕 */
+            overflow-y: auto;
+        }
+
+        .race-btn {
+            text-align: left;
+            padding: 16px 20px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #f0f2f5;
+            color: #4a5568;
+            font-size: 0.95em;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+            position: relative;
+        }
+
+        .race-btn:hover {
+            background: #f8fafb;
+            color: #00a8cc;
+        }
+
+        .race-btn.active {
+            background: #ffffff;
+            color: #00a8cc;
+            font-weight: bold;
+        }
+        
+        /* 选中时的青蓝竖线 */
+        .race-btn.active::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: #00a8cc;
+        }
+
+        /* 右侧介绍区 */
+        .race-content-area {
+            flex: 1;
+            min-width: 0;
+            background: #ffffff;
+            border: 1px solid #e1e5eb;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+            min-height: 400px;
+        }
+
+        .race-content {
+            display: none;
+        }
+
+        .race-content.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .race-content h2 {
+            color: #1a1d20;
+            font-size: 1.4em;
+            font-weight: 600;
+            letter-spacing: 3px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e1e5eb;
+            position: relative;
+        }
+
+        /* 标题左侧的小青蓝块 */
+        .race-content h2::before {
+            content: "";
+            display: inline-block;
+            width: 6px;
+            height: 18px;
+            background-color: #00a8cc;
+            margin-right: 12px;
+            vertical-align: text-bottom;
+        }
+
+        .race-content p {
+            color: #4a5568;
+            line-height: 2.2; /* 拉大行距，更适合阅读 */
+            font-size: 0.95em;
+            margin-bottom: 18px;
+            text-indent: 2em; /* 首行缩进 */
+            text-align: justify;
+        }
+
+        .race-content p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* ==========================================
+           底部
+           ========================================== */
+        .light-bottom {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px 40px;
+        }
+
+        footer {
+            text-align: center;
+            color: #8892a0;
+            font-size: 0.85em;
+            line-height: 2;
+            padding: 20px 0;
+            border-top: 1px solid #d1d9e0;
+        }
+
+        /* 手机适配 */
+        @media (max-width: 700px) {
+            .container {
+                flex-direction: column;
+                gap: 20px;
+                margin-top: -20px;
+            }
+
+            .race-list {
+                flex: none;
+                width: 100%;
+                position: static;
+                flex-direction: row;
+                flex-wrap: wrap;
+                background: transparent;
+                border: none;
+                box-shadow: none;
+            }
+
+            .race-btn {
+                flex: 1 1 auto;
+                text-align: center;
+                background: #ffffff;
+                border: 1px solid #e1e5eb;
+                margin-bottom: 10px;
+                border-radius: 4px;
+                padding: 12px 10px;
+                font-size: 0.85em;
+            }
+            
+            .race-btn.active::before {
+                width: 100%;
+                height: 3px;
+                top: auto;
+                bottom: 0;
+            }
+
+            .race-content-area {
+                padding: 25px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 上半部黑底 -->
+    <div class="dark-top">
+        <header>
+            <h1>种族</h1>
+            <p>—— 这个世界上的住民们 ——</p>
+            <a href="index.html" class="back-home">← 返回首页</a>
+        </header>
+    </div>
+
+    <!-- 主体 -->
+    <div class="container">
+
+        <!-- 左侧：种族名 -->
+        <aside class="race-list">
+            <button class="race-btn active" data-race="race1">人类</button>
+            <button class="race-btn" data-race="race2">埃瑟瑞尔</button>
+            <button class="race-btn" data-race="race3">埃布利尔</button>
+            <button class="race-btn" data-race="race4">奈克莫瓦</button>
+            <button class="race-btn" data-race="race5">赫希</button>
+            <button class="race-btn" data-race="race6">鲁纳</button>
+            <button class="race-btn" data-race="race7">奈亚迪</button>
+            <button class="race-btn" data-race="race8">利那瑞</button>
+            <button class="race-btn" data-race="race9">沃伦威尔</button>
+            <button class="race-btn" data-race="race10">维斯佩拉</button>
+            <button class="race-btn" data-race="race11">尼色雷斯</button>
+            <button class="race-btn" data-race="race12">诺克希</button>
+            <button class="race-btn" data-race="race13">米尔希</button>
+            <button class="race-btn" data-race="race14">希尔萨里</button>
+        </aside>
+
+        <!-- 右侧：种族介绍 -->
+        <main class="race-content-area">
+
+            <div class="race-content active" id="race1">
+                <h2>人类</h2>
+                <p>
+                    世界上数量最多的种族，寿命短暂却繁衍迅速。没有天生的力量，却以智慧和适应力在各个大陆立足。
+                </p>
+                <p>
+                    团结与繁衍，生存与发展。智慧是武器也是动力，人类是文明的奠基。
+                </p>
+            </div>
+
+            <div class="race-content" id="race2">
+                <h2>埃瑟瑞尔</h2>
+                <p>
+                    寿命极长的古老种族，擅于使用术式。其特征是横向的长且尖的耳朵。埃瑟瑞尔一词来源于阿奎拉的部分地区，现为目前国际上对精灵等种族的统一名称。
+                </p>
+                <p>
+                    埃瑟瑞尔指代的种族目前有精灵、妖精/妖灵、兽妖、地灵/地精、仙灵。
+                </p>
+            </div>
+
+            <div class="race-content" id="race3">
+                <h2>埃布利尔</h2>
+                <p>
+                    体格强健、崇尚力量的古老种族。基因杂乱使得不同种族的特征各不相同。埃布利尔一词来源于阿奎拉的部分地区，现为目前国际上对魔族等种族的统一名称。
+                </p>
+                <p>
+                    埃布利尔指代的种族目前有血魔、魅魔、恶魔、魍魉、幻造妖、奇美拉。
+                </p>
+            </div>
+
+            <div class="race-content" id="race4">
+                <h2>奈克莫瓦</h2>
+                <p>
+                   并非指某一种族，而是对除人类、埃瑟瑞尔和埃布利尔外的其他种族的称呼。奈克莫瓦一词来源不明，可理解为"亚人类"。可用于不知对方种族时的临时称呼。
+                </p>
+            </div>
+
+            <div class="race-content" id="race5">
+                <h2>赫希</h2>
+                <p>对犬科(不包含狼和狐)奈克莫瓦的统称。</p>
+                <p>赫希一词来源不明，大概源于环流中心地带。</p>
+            </div>
+            
+            <div class="race-content" id="race6">
+                <h2>鲁纳</h2>
+                <p>对兔科奈克莫瓦的统称。</p>
+                <p>鲁纳一词来源于帕尔玛。</p>
+            </div>
+            
+            <div class="race-content" id="race7">
+                <h2>奈亚迪</h2>
+                <p>对水生生物奈克莫瓦的统称。</p>
+                <p>奈亚迪一词来源于瓦莱利亚。</p>
+            </div>
+            
+            <div class="race-content" id="race8">
+                <h2>利那瑞</h2>
+                <p>对猫科奈克莫瓦的统称。</p>
+                <p>利那瑞一词来源不明，大概源于环流外围。</p>
+            </div>
+            
+            <div class="race-content" id="race9">
+                <h2>沃伦威尔</h2>
+                <p>对狼奈克莫瓦的统称。</p>
+                <p>沃伦威尔一词来源于阿奎拉。</p>
+            </div>
+            
+            <div class="race-content" id="race10">
+                <h2>维斯佩拉</h2>
+                <p>对蛇奈克莫瓦的统称。</p>
+                <p>维斯佩拉一词来源不明。</p>
+            </div>
+            
+            <div class="race-content" id="race11">
+                <h2>尼色雷斯</h2>
+                <p>对蝙蝠奈克莫瓦的统称。</p>
+                <p>尼色雷斯一词来源于卡隆奎蒂。</p>
+            </div>
+
+            <div class="race-content" id="race12">
+                <h2>诺克希</h2>
+                <p>对鸟类奈克莫瓦的统称。</p>
+                <p>诺克希一词来源于帕尔玛。</p>
+            </div>
+            
+            <div class="race-content" id="race13">
+                <h2>米尔希</h2>
+                <p>对啮齿动物奈克莫瓦的统称。</p>
+                <p>米尔希一词来源不明，大概源于环流中心地带。</p>
+            </div>
+            
+            <div class="race-content" id="race14">
+                <h2>希尔萨里</h2>
+                <p>对狐奈克莫瓦的统称。</p>
+                <p>希尔萨里一词来源于阿奎拉。</p>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- 底部 -->
+    <div class="light-bottom">
+        <footer>
+            © 2026 【铭刻】的概念 · 保留所有权利<br><br>
+            说起来，你一直没有提过与你有关的故事呢，亲爱的【命运】。
+        </footer>
+    </div>
+
+    <script>
+        const raceButtons = document.querySelectorAll('.race-btn');
+        const raceContents = document.querySelectorAll('.race-content');
+
+        raceButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // 按钮高亮切换
+                raceButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // 内容切换
+                const target = btn.dataset.race;
+                raceContents.forEach(c => {
+                    c.classList.toggle('active', c.id === target);
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>

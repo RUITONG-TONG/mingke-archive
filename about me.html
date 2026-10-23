@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>关于【铭刻】 · 【铭刻】的存录</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            /* 整体灰白底色 */
+            background-color: #f0f2f5; 
+            font-family: "Helvetica Neue", "PingFang SC", "Microsoft YaHei", sans-serif;
+            color: #1a1d20;
+            min-height: 100vh;
+        }
+
+        /* ==========================================
+           上半部分：黑色画廊区
+           ========================================== */
+        .dark-top {
+            background-color: #121418;
+            padding: 60px 20px 80px;
+            /* 同样的斜切角设计 */
+            clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
+            position: relative;
+            z-index: 1;
+            border-bottom: 2px solid #00d4ff;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2em;
+            font-weight: 300;
+            color: #ffffff;
+            letter-spacing: 8px;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            color: #8892a0;
+            font-size: 0.9em;
+            letter-spacing: 4px;
+            margin-bottom: 25px;
+        }
+
+        .back-home {
+            display: inline-block;
+            padding: 6px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #c8d0e7;
+            text-decoration: none;
+            font-size: 0.85em;
+            letter-spacing: 2px;
+            transition: all 0.3s;
+        }
+
+        .back-home:hover {
+            background: #ffffff;
+            color: #121418;
+            border-color: #ffffff;
+        }
+
+        /* 头像：从圆形改为高级方形，带青蓝角标 */
+        .avatar-wrap {
+            width: 160px;
+            height: 160px;
+            margin: 40px auto 0;
+            position: relative;
+        }
+
+        .avatar-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border: 1px solid #333;
+            filter: grayscale(20%) contrast(110%);
+        }
+
+        /* 左下角青蓝色装饰线 */
+        .avatar-wrap::before {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: -10px;
+            width: 40px;
+            height: 40px;
+            border-bottom: 2px solid #00d4ff;
+            border-left: 2px solid #00d4ff;
+            z-index: 2;
+        }
+
+        /* ==========================================
+           下半部分：灰白文字区
+           ========================================== */
+        .light-bottom {
+            max-width: 750px;
+            margin: 0 auto;
+            padding: 20px 20px 60px;
+        }
+
+        /* 卡片：纯白底色，大量留白 */
+        .about-card {
+            background: #ffffff;
+            padding: 40px 35px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+            position: relative;
+        }
+
+        /* 第一张卡片向上提，压住黑底边缘 */
+        .about-card:first-child {
+            margin-top: -60px;
+            z-index: 2;
+            border-top: 4px solid #00d4ff;
+        }
+
+        /* 标题：简洁的线条分割 */
+        .about-card h2 {
+            color: #1a1d20;
+            font-size: 1.2em;
+            font-weight: 600;
+            letter-spacing: 3px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e1e5eb;
+            position: relative;
+        }
+
+        /* 标题左侧的小青蓝块 */
+        .about-card h2::before {
+            content: "";
+            display: inline-block;
+            width: 6px;
+            height: 16px;
+            background-color: #00a8cc;
+            margin-right: 12px;
+            vertical-align: middle;
+        }
+
+        /* 正文排版 */
+        .about-card p {
+            color: #4a5568; /* 极深灰，清晰不刺眼 */
+            font-size: 0.95em;
+            line-height: 2.2; /* 拉大行距，适合慢读 */
+            margin-bottom: 18px;
+            text-indent: 2em; /* 首行缩进 */
+            text-align: justify; /* 两端对齐 */
+        }
+
+        .about-card p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* 强调某些特殊的字，可以加个类，比如 <span class="highlight"></span> */
+        .highlight {
+            color: #00a8cc;
+            font-weight: bold;
+        }
+
+        /* 落款 */
+        .signature {
+            text-align: right;
+            color: #00a8cc;
+            font-size: 1.1em;
+            letter-spacing: 2px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px dashed #e1e5eb;
+            font-style: italic;
+            text-indent: 0;
+        }
+
+        /* 底部文字 */
+        footer {
+            text-align: center;
+            color: #8892a0;
+            font-size: 0.85em;
+            line-height: 2;
+            padding-bottom: 40px;
+        }
+
+        /* 手机适配 */
+        @media (max-width: 700px) {
+            .avatar-wrap { width: 130px; height: 130px; }
+            .about-card { padding: 30px 20px; }
+            .about-card:first-child { margin-top: -40px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 上半部：黑底 -->
+    <div class="dark-top">
+        <header>
+            <h1>关于【铭刻】</h1>
+            <p>—— 存录者的话 ——</p>
+            <a href="index.html" class="back-home">← 返回首页</a>
+        </header>
+
+        <div class="avatar-wrap">
+            <img src="images/mingke.png" alt="【铭刻】">
+        </div>
+    </div>
+
+    <!-- 下半部：灰白 -->
+    <div class="light-bottom">
+
+        <!-- 自我介绍 -->
+        <div class="about-card">
+            <h2>我是谁？</h2>
+            <p>
+                你好，亲爱的【命运】。我是【铭刻】伊特诺特，这个见闻馆的看守者，也是每个事件的记录者。或者说——我是这些世界、这些角色背后，那个愿意花时间把它们一个个记录下来的人。
+            </p>
+            <p>
+                我喜欢那些一个又一个世界，那些规则、那些历史、那些回忆。你所安排的命运。然后看着那些角色，在他们自己的轨迹里，活过来。至于我本人……倒没什么可以讲的了。
+            </p>
+        </div>
+
+        <!-- 感想 -->
+        <div class="about-card">
+            <h2>我想说……</h2>
+            <p>
+                【空间】的容量很大，大到可以装下无数个平行宇宙；【时间】的容量却很小，小到每一段故事，都只是我想对某个人说的话。
+            </p>
+            <p>
+                呵，如果希洛看到了，肯定又会埋怨我。所以拜托你别给他看到。亲爱的【命运】，你也许正在哪里经历着什么故事吧。但这个故事无论多么精彩纷呈，都别忘了我这个老朋友，记得来找我，然后讲讲你的故事。
+            </p>
+            <p>
+              其实我并不喜欢别人称呼我【铭刻】，我还是更喜欢我的本名。只可惜成为概念后我就失去了我的姓氏……令人惋惜。如果我想起来什么了，就再和你说吧。
+            </p>
+
+            <div class="signature">—— 伊特诺特</div>
+        </div>
+
+    </div>
+
+    <footer>
+        © 2026 【铭刻】的概念 · 保留所有权利<br><br>
+        我简单的做了一个我自己的简介，但我全部用来和你叙旧了，到是什么都没介绍呢。呵呵。
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>【铭刻】的存录</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            /* 默认底色为灰白 */
+            background-color: #f0f2f5; 
+            font-family: "Helvetica Neue", "PingFang SC", "Microsoft YaHei", sans-serif;
+            min-height: 100vh;
+            color: #1a1d20;
+        }
+
+        /* ==========================================
+           上半部分：高级黑区域
+           ========================================== */
+        .dark-top {
+            background-color: #121418;
+            color: #ffffff;
+            padding: 50px 20px 80px;
+            /* 底部切角，产生与灰白背景的错层感 */
+            clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
+            position: relative;
+            z-index: 1;
+            border-bottom: 2px solid #00d4ff;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        header h1 {
+            font-size: 2.2em;
+            font-weight: 300;
+            color: #ffffff;
+            letter-spacing: 8px;
+            margin-bottom: 15px;
+        }
+
+        header p {
+            color: #8892a0;
+            font-size: 0.95em;
+            letter-spacing: 3px;
+        }
+
+        /* 主图：去掉花哨边框，改成硬朗的方框 */
+        .hero-image {
+            max-width: 650px;
+            margin: 0 auto;
+            border: 1px solid #333;
+            position: relative;
+        }
+        
+        /* 给主图加一个角标装饰 */
+        .hero-image::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            right: -10px;
+            width: 30px;
+            height: 30px;
+            border-bottom: 2px solid #00d4ff;
+            border-right: 2px solid #00d4ff;
+        }
+
+        .hero-image img {
+            width: 100%;
+            display: block;
+            filter: grayscale(20%) contrast(110%); /* 让图片稍微有点质感 */
+        }
+
+        /* ==========================================
+           下半部分：灰白内容区
+           ========================================== */
+        .light-bottom {
+            padding: 20px 20px 40px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* 随机小提示卡片：白底黑字，左侧青蓝粗线 */
+        .tip-card {
+            background: #ffffff;
+            border: 1px solid #e1e5eb;
+            border-left: 5px solid #00a8cc;
+            padding: 25px 30px;
+            margin: -40px auto 40px; /* 向上偏移，压住黑底边缘 */
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+
+        .tip-card .tip-label {
+            flex: 0 0 auto;
+            color: #00a8cc;
+            font-size: 0.85em;
+            font-weight: bold;
+            letter-spacing: 2px;
+            padding: 4px 12px;
+            border: 1px solid #00a8cc;
+            border-radius: 2px;
+            white-space: nowrap;
+        }
+
+        .tip-card .tip-text {
+            color: #2c3540; /* 显眼的深灰 */
+            font-size: 0.95em;
+            line-height: 1.8;
+            animation: tipFade 0.5s ease;
+        }
+
+        @keyframes tipFade {
+            from { opacity: 0; transform: translateY(6px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 导航按钮区：极简线条风 */
+        .nav {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 50px;
+        }
+
+        .nav a {
+            display: block;
+            text-align: center;
+            padding: 18px;
+            background: #ffffff;
+            border: 1px solid #d1d9e0;
+            color: #2c3540;
+            text-decoration: none;
+            font-weight: 600;
+            letter-spacing: 2px;
+            transition: all 0.3s;
+        }
+
+        .nav a:hover {
+            background: #00a8cc;
+            border-color: #00a8cc;
+            color: #ffffff;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 168, 204, 0.2);
+        }
+
+        /* 底部文字 */
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #8892a0;
+            font-size: 0.85em;
+            line-height: 2;
+            border-top: 1px solid #d1d9e0;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 上半部分：黑底区域 -->
+    <div class="dark-top">
+        <header>
+            <h1>【铭刻】的存录</h1>
+            <p>欢迎你，亲爱的【命运】，来到我的见闻馆</p>
+        </header>
+
+        <div class="hero-image">
+            <img src="images/itnt.png" alt="【铭刻】">
+        </div>
+    </div>
+
+    <!-- 下半部分：灰白底区域 -->
+    <div class="light-bottom">
+        
+        <!-- 随机小提示 -->
+        <div class="tip-card">
+            <span class="tip-label">说些什么</span>
+            <span class="tip-text" id="tipText">加载中……</span>
+        </div>
+
+        <!-- 页面跳转导航 -->
+        <nav class="nav">
+            <a href="characters.html">角色介绍</a>
+            <a href="races.html">种族</a>
+            <a href="circulation.html">环流</a>
+            <a href="timeline.html">时间线与世界线</a>
+            <a href="factions.html">势力与阵营</a>
+            <a href="gallery.html">珍藏的图片</a>
+            <a href="about me.html">关于【铭刻】</a>
+        </nav>
+
+        <footer>
+            © 2026 【铭刻】的概念 · 保留所有权利<br><br>
+            你也许想问我为什么要记录这些。<br>
+            这样吧，你就把我当做一个普通的收藏家。过去或现在亦是。
+        </footer>
+    </div>
+
+<script>
+    // ====== 小提示内容 ======
+    const tips = [
+        "·亲爱的【命运】。这里的每一段存录，都在等一个愿意读完它的人。",
+        "·据说边境某处下封印着的东西，至今没有人敢去确认。",
+        "·环流的大陆并非无限，只是边境的探索太过困难。",
+        "·帕尔玛某家店铺的情报网，比任何国家的密探都要灵通。",
+        "·有些世界线，一旦踏入就再也回不来了。",
+        "·【铭刻】从不记录自己，只记录别人。",
+        "·埃瑟瑞尔的记忆里，藏着许多已经消失的历史。",
+        "·从那场战争之后，其他埃布利尔的处境……岌岌可危。",
+        "·亡灵保留着生前的记忆，却不再拥有温度。",
+        "·去往你想了解的地方吧。",
+        "·亲爱的【命运】，我会等你回来给我讲述你的所见所闻的。一直。",
+        "·奈克莫瓦与普通的动物还是需要区分开来……毕竟奈克莫瓦算作“人类”。",
+        "·部分保留了天性的赫希们可能会希望你摸摸他们的头。你喜欢毛茸茸吗?",
+        "·很多奈克莫瓦都保留了原型的一些特征，比如耳朵和尾巴等等。",
+        "·利那瑞们可以跳的很高，所以他们被限制参加跳高比赛……哈哈。",
+        "·亲爱的【命运】，你成为概念前是什么种族?你从来没告诉过我呢。",
+        "·不要给兔子投喂一些加工食品，就算是鲁纳也不行。",
+        "·大部分诺克希的体重很轻，太重的诺克希可能会飞不起来。原因?显而易见。",
+        "·我在成为概念前……可能是一位埃瑟瑞尔?我猜的。"
+    ];
+
+    // 随机选一条
+    const randomTip = tips[Math.floor(Math.random() * tips.length)];
+    document.getElementById('tipText').textContent = randomTip;
+</script>
+
+</body>
+</html>

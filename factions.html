@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>势力与阵营 · 【铭刻】的存录</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            /* 整体灰白底色 */
+            background-color: #f0f2f5; 
+            font-family: "Helvetica Neue", "PingFang SC", "Microsoft YaHei", sans-serif;
+            color: #1a1d20;
+            min-height: 100vh;
+        }
+
+        /* ==========================================
+           上半部分：黑色标题区
+           ========================================== */
+        .dark-top {
+            background-color: #121418;
+            padding: 50px 20px 60px;
+            clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
+            position: relative;
+            z-index: 1;
+            border-bottom: 2px solid #00d4ff;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2em;
+            font-weight: 300;
+            color: #ffffff;
+            letter-spacing: 8px;
+            margin-bottom: 15px;
+        }
+
+        header p {
+            color: #8892a0;
+            font-size: 0.95em;
+            letter-spacing: 3px;
+            margin-bottom: 25px;
+        }
+
+        .back-home {
+            display: inline-block;
+            padding: 8px 24px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #c8d0e7;
+            text-decoration: none;
+            font-size: 0.85em;
+            letter-spacing: 2px;
+            transition: all 0.3s;
+        }
+
+        .back-home:hover {
+            background: #ffffff;
+            color: #121418;
+            border-color: #ffffff;
+        }
+
+        /* ==========================================
+           势力列表
+           ========================================== */
+        .faction-list {
+            max-width: 1000px;
+            margin: -30px auto 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            position: relative;
+            z-index: 2;
+            padding: 0 20px;
+        }
+
+        /* 单个势力卡片 */
+        .faction {
+            background: #ffffff;
+            border: 1px solid #e1e5eb;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+            transition: all 0.3s;
+        }
+
+        .faction:hover {
+            border-color: #00a8cc;
+            box-shadow: 0 15px 35px rgba(0, 168, 204, 0.08);
+        }
+
+        /* 势力头部 */
+        .faction-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e1e5eb;
+        }
+
+        .faction-emblem {
+            width: 65px;
+            height: 65px;
+            object-fit: cover;
+            border: 1px solid #e1e5eb;
+            background: #f8fafb;
+            flex: 0 0 auto;
+        }
+
+        .faction-name {
+            color: #1a1d20;
+            font-size: 1.4em;
+            font-weight: 600;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .faction-tag {
+            color: #8892a0;
+            font-size: 0.85em;
+            letter-spacing: 1px;
+        }
+
+        /* 势力简介 */
+        .faction-desc {
+            color: #4a5568;
+            line-height: 2;
+            font-size: 0.95em;
+            margin-bottom: 25px;
+            text-align: justify;
+        }
+
+        /* 代表人物标题 */
+        .members-title {
+            color: #00a8cc;
+            font-size: 0.9em;
+            font-weight: 600;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .members-title::before {
+            content: "";
+            display: inline-block;
+            width: 4px;
+            height: 14px;
+            background: #00a8cc;
+        }
+
+        /* 代表人物头像列表 */
+        .members {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .member {
+            width: 80px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .member:hover {
+            transform: translateY(-4px);
+        }
+
+        /* 头像改成方形，更有档案感 */
+        .member img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border: 1px solid #e1e5eb;
+            transition: all 0.3s;
+            background: #f8fafb;
+            filter: grayscale(15%);
+        }
+
+        .member:hover img {
+            border-color: #00a8cc;
+            box-shadow: 0 5px 15px rgba(0, 168, 204, 0.2);
+            filter: grayscale(0%);
+        }
+
+        .member span {
+            display: block;
+            margin-top: 10px;
+            color: #4a5568;
+            font-size: 0.8em;
+            letter-spacing: 1px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: color 0.3s;
+        }
+
+        .member:hover span {
+            color: #00a8cc;
+            font-weight: bold;
+        }
+
+        /* ==========================================
+           弹窗：白底极简风
+           ========================================== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(18, 20, 24, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.show { display: flex; }
+
+        .modal-box {
+            background: #ffffff;
+            border: 1px solid #e1e5eb;
+            max-width: 450px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 35px;
+            position: relative;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-box img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            display: block;
+            margin: 0 auto 20px;
+            border: 1px solid #e1e5eb;
+            background: #f8fafb;
+        }
+
+        .modal-box h2 {
+            color: #1a1d20;
+            font-size: 1.4em;
+            font-weight: 600;
+            text-align: center;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .modal-box .modal-role {
+            text-align: center;
+            color: #00a8cc;
+            font-size: 0.9em;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e1e5eb;
+        }
+
+        .modal-box p {
+            color: #4a5568;
+            line-height: 2;
+            margin-bottom: 12px;
+            font-size: 0.95em;
+            text-align: justify;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: #8892a0;
+            font-size: 1.8em;
+            cursor: pointer;
+            line-height: 1;
+            transition: color 0.3s;
+        }
+        .modal-close:hover { color: #1a1d20; }
+
+        /* ==========================================
+           底部
+           ========================================== */
+        .light-bottom {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px 0 40px;
+            color: #8892a0;
+            font-size: 0.85em;
+            line-height: 2;
+            border-top: 1px solid #d1d9e0;
+        }
+
+        /* 手机适配 */
+        @media (max-width: 700px) {
+            .faction { padding: 20px; }
+            .faction-name { font-size: 1.2em; }
+            .member { width: 65px; }
+            .member img { width: 65px; height: 65px; }
+            .faction-header { gap: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 上半部黑底 -->
+    <div class="dark-top">
+        <header>
+            <h1>势力与阵营</h1>
+            <p>—— 人们总需要群体的力量 ——</p>
+            <a href="index.html" class="back-home">← 返回首页</a>
+        </header>
+    </div>
+
+    <!-- 势力列表主体 -->
+    <div class="faction-list">
+
+        <!-- ====== 势力一 ====== -->
+        <div class="faction">
+            <div class="faction-header">
+                <img class="faction-emblem" src="images/徽记1.png" alt="徽记">
+                <div>
+                    <div class="faction-name">·艾柯尼特（斯诺瓦的代表家族）</div>
+                    <div class="faction-tag">·艺术与效率的结合，家族传承兴盛。</div>
+                </div>
+            </div>
+
+            <p class="faction-desc">
+                瓦莱利亚被排除在三大家族外的第四大家族。
+            </p>
+
+            <div class="members-title">代表人物</div>
+            <div class="members">
+
+                <div class="member" data-member="m1">
+                    <img src="images/人物1.png" alt="人物1">
+                    <span>多里安·艾柯尼特</span>
+                </div>
+
+                <div class="member" data-member="m2">
+                    <img src="images/人物1.png" alt="人物1">
+                    <span>罗丝玛丽·艾柯尼特</span>
+                </div>
+                
+                <div class="member" data-member="m3">
+                    <img src="images/人物1.png" alt="人物1">
+                    <span>塞缪尔·艾柯尼特</span>
+                </div>
+                
+                <div class="member" data-member="m4">
+                    <img src="images/人物1.png" alt="人物1">
+                    <span>艾薇拉·艾柯尼特</span>
+                </div>
+                
+                <div class="member" data-member="m5">
+                    <img src="images/人物1.png" alt="人物1">
+                    <span>格雷尔·艾柯尼特</span>
+                </div>
+                
+            </div>
+        </div>
+
+        <!-- ====== 势力二 ====== -->
+        <div class="faction">
+            <div class="faction-header">
+                <img class="faction-emblem" src="images/徽记2.png" alt="徽记">
+                <div>
+                    <div class="faction-name"><span style="color: #dc143c; font-size: 0.8em; border: 1px solid #dc143c; padding: 2px 6px; border-radius: 2px; margin-right: 5px;">［未解识］</span>·源于【死亡】的组织</div>
+                    <div class="faction-tag">·亡灵的引路者，死亡的执行人。</div>
+                </div>
+            </div>
+
+            <p class="faction-desc">
+                没有任何名号的神秘组织。【死亡】概念引领的生者们。
+            </p>
+            
+        </div>
+
+        <!-- ====== 势力三 ====== -->
+        <div class="faction">
+            <div class="faction-header">
+                <img class="faction-emblem" src="images/徽记3.png" alt="徽记">
+                <div>
+                    <div class="faction-name"><span style="color: #dc143c; font-size: 0.8em; border: 1px solid #dc143c; padding: 2px 6px; border-radius: 2px; margin-right: 5px;">［未解识］</span>·祈愿雨</div>
+                    <div class="faction-tag">·热衷于音乐创作的和辉高中生社团。</div>
+                </div>
+            </div>
+
+            <p class="faction-desc">
+                由22名学生与一名教师组合的音乐社团。其基调为交响乐与爵士乐。入团条件为至少会使用两种乐器。
+            </p>
+            
+        </div>
+            
+        <!-- ====== 势力四 ====== -->
+        <div class="faction">
+            <div class="faction-header">
+                <img class="faction-emblem" src="images/徽记4.png" alt="徽记">
+                <div>
+                    <div class="faction-name"><span style="color: #dc143c; font-size: 0.8em; border: 1px solid #dc143c; padding: 2px 6px; border-radius: 2px; margin-right: 5px;">［未解识］</span>·万光教</div>
+                    <div class="faction-tag">·帕尔玛的国家机构。</div>
+                </div>
+            </div>
+
+            <p class="faction-desc">
+                帕尔玛的主体宗教。包容性极强，允许外教和外教徒入城，但对异教徒(邪教徒)绝不容忍。
+            </p>
+            
+        </div>
+            
+        <!-- ====== 势力五 ====== -->
+        <div class="faction">
+            <div class="faction-header">
+                <img class="faction-emblem" src="images/徽记5.png" alt="徽记">
+                <div>
+                    <div class="faction-name"><span style="color: #dc143c; font-size: 0.8em; border: 1px solid #dc143c; padding: 2px 6px; border-radius: 2px; margin-right: 5px;">［未解识］</span>·宏联院</div>
+                    <div class="faction-tag">·鸿熙的国家机构</div>
+                </div>
+            </div>
+
+            <p class="faction-desc">
+                位于鸿熙各个地区，负责处理当地的案件与诉讼的官方机构。
+            </p>
+            
+        </div>
+            
+        <!-- ====== 势力六 ====== -->
+        <div class="faction">
+            <div class="faction-header">
+                <img class="faction-emblem" src="images/徽记6.png" alt="徽记">
+                <div>
+                    <div class="faction-name"><span style="color: #dc143c; font-size: 0.8em; border: 1px solid #dc143c; padding: 2px 6px; border-radius: 2px; margin-right: 5px;">［未解识］</span>·弥留在七日之后</div>
+                    <div class="faction-tag">·规模极大的互联网论坛。</div>
+                </div>
+            </div>
+
+            <p class="faction-desc">
+                主要针对环流各地的灵异事件、案件、非正常死亡和都市传说等话题的互联网论坛。
+            </p>
+            
+        </div>
+            
+        <!-- ====== 势力七 ====== -->
+        <div class="faction">
+            <div class="faction-header">
+                <img class="faction-emblem" src="images/徽记7.png" alt="徽记">
+                <div>
+                    <div class="faction-name"><span style="color: #dc143c; font-size: 0.8em; border: 1px solid #dc143c; padding: 2px 6px; border-radius: 2px; margin-right: 5px;">［未解识］</span>·昔新园社区</div>
+                    <div class="faction-tag">·(未知)</div>
+                </div>
+            </div>
+
+            <p class="faction-desc">
+                (未知)
+            </p>
+            
+        </div>
+            
+        <!-- ====== 势力八 ====== -->
+        <div class="faction">
+            <div class="faction-header">
+                <img class="faction-emblem" src="images/徽记8.png" alt="徽记">
+                <div>
+                    <div class="faction-name"><span style="color: #dc143c; font-size: 0.8em; border: 1px solid #dc143c; padding: 2px 6px; border-radius: 2px; margin-right: 5px;">［未解识］</span>·金冕院</div>
+                    <div class="faction-tag">·帕尔玛的国家机构。</div>
+                </div>
+            </div>
+
+            <p class="faction-desc">
+                由"枢机议会"的七位枢机与贵族组成。
+            </p>
+            
+        </div>
+            
+        <!-- ====== 势力九 ====== -->
+        <div class="faction">
+            <div class="faction-header">
+                <img class="faction-emblem" src="images/徽记9.png" alt="徽记">
+                <div>
+                    <div class="faction-name"><span style="color: #dc143c; font-size: 0.8em; border: 1px solid #dc143c; padding: 2px 6px; border-radius: 2px; margin-right: 5px;">［未解识］</span>·金曦圣堂</div>
+                    <div class="faction-tag">·(未知)</div>
+                </div>
+            </div>
+
+            <p class="faction-desc">
+                (未知)
+            </p>
+            
+        </div>
+            
+        <!-- ====== 势力十 ====== -->
+        <div class="faction">
+            <div class="faction-header">
+                <img class="faction-emblem" src="images/徽记10.png" alt="徽记">
+                <div>
+                    <div class="faction-name"><span style="color: #dc143c; font-size: 0.8em; border: 1px solid #dc143c; padding: 2px 6px; border-radius: 2px; margin-right: 5px;">［未解识］</span>·银叶骑士团</div>
+                    <div class="faction-tag">·帕尔玛的国家机构。</div>
+                </div>
+            </div>
+
+            <p class="faction-desc">
+                负责处理帕尔玛主城的治安巡查与案件调查。
+            </p>
+            
+        </div>
+
+    </div>
+
+    <!-- 弹窗 -->
+    <div class="modal-overlay" id="modal">
+        <div class="modal-box">
+            <button class="modal-close" id="modalClose">×</button>
+            <img id="modalImg" src="" alt="">
+            <h2 id="modalName">名字</h2>
+            <div class="modal-role" id="modalRole">身份</div>
+            <div id="modalBody">简介</div>
+        </div>
+    </div>
+
+    <!-- 底部 -->
+    <div class="light-bottom">
+        <footer>
+            © 2026 【铭刻】的概念 · 保留所有权利<br><br>
+            如果某一天，即使是作为【命运】的你……也消失了。会怎么办？
+        </footer>
+    </div>
+
+    <script>
+        // ====== 人物资料 ======
+        const memberData = {
+            m1: {
+                name: "多里安·艾柯尼特",
+                img: "images/人物1.png",
+                body: `
+                    <p><span style="color: #dc143c;">［未解识］</span></p>
+                `
+            },
+            m2: {
+                name: "罗丝玛丽·艾柯尼特",
+                img: "images/人物4.png",
+                body: `
+                    <p><span style="color: #dc143c;">［未解识］</span></p>
+                `
+            },
+            m3: {
+                name: "塞缪尔·艾柯尼特",
+                img: "images/人物4.png",
+                body: `
+                    <p>与艾薇拉是亲兄妹。经历循环之人。非常擅长察言观色，总会刻意降低自己的存在感。外表看起来温婉善良，举止优雅，但对不满之人从来不会手下留情。</p>
+                `
+            },
+            m4: {
+                name: "艾薇拉·艾柯尼特",
+                img: "images/人物4.png",
+                body: `
+                    <p><span style="color: #dc143c;">［未解识］</span></p>
+                `
+            },
+            m5: {
+                name: "格雷尔·艾柯尼特",
+                img: "images/人物4.png",
+                body: `
+                    <p><span style="color: #dc143c;">［未解识］</span></p>
+                `
+            }
+        };
+
+        // ====== 逻辑 ======
+        const modal = document.getElementById('modal');
+        const modalImg = document.getElementById('modalImg');
+        const modalName = document.getElementById('modalName');
+        const modalRole = document.getElementById('modalRole');
+        const modalBody = document.getElementById('modalBody');
+
+        document.querySelectorAll('.member').forEach(m => {
+            m.addEventListener('click', () => {
+                const data = memberData[m.dataset.member];
+                if (data) {
+                    modalImg.src = data.img;
+                    modalName.textContent = data.name;
+                    modalRole.textContent = data.role || ""; // 如果没有 role 则留空
+                    modalBody.innerHTML = data.body;
+                    modal.classList.add('show');
+                }
+            });
+        });
+
+        document.getElementById('modalClose').addEventListener('click', () => {
+            modal.classList.remove('show');
+        });
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) modal.classList.remove('show');
+        });
+    </script>
+
+</body>
+</html>

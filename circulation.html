@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>地图 · 【铭刻】的存录</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            /* 整体灰白底色 */
+            background-color: #f0f2f5; 
+            font-family: "Helvetica Neue", "PingFang SC", "Microsoft YaHei", sans-serif;
+            color: #1a1d20;
+            min-height: 100vh;
+        }
+
+        /* ==========================================
+           上半部分：黑色标题区
+           ========================================== */
+        .dark-top {
+            background-color: #121418;
+            padding: 50px 20px 60px;
+            clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
+            position: relative;
+            z-index: 1;
+            border-bottom: 2px solid #00d4ff;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2em;
+            font-weight: 300;
+            color: #ffffff;
+            letter-spacing: 8px;
+            margin-bottom: 15px;
+        }
+
+        header p {
+            color: #8892a0;
+            font-size: 0.95em;
+            letter-spacing: 3px;
+            margin-bottom: 25px;
+        }
+
+        .back-home {
+            display: inline-block;
+            padding: 8px 24px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #c8d0e7;
+            text-decoration: none;
+            font-size: 0.85em;
+            letter-spacing: 2px;
+            transition: all 0.3s;
+        }
+
+        .back-home:hover {
+            background: #ffffff;
+            color: #121418;
+            border-color: #ffffff;
+        }
+
+        /* ==========================================
+           地图区域
+           ========================================== */
+        .map-wrapper {
+            position: relative;
+            max-width: 900px;
+            margin: -30px auto 30px; /* 向上提压住黑边 */
+            background: #ffffff;
+            padding: 10px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e1e5eb;
+            position: relative;
+            z-index: 2;
+            aspect-ratio: 1 / 1; /* 锁死比例 */
+        }
+
+        .map-wrapper img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover;
+            /* 让地图颜色更柔和不刺眼 */
+            filter: saturate(0.8) contrast(1.05); 
+        }
+
+        /* 热区 */
+        .hotspot {
+            position: absolute;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all 0.3s;
+            background: rgba(0, 168, 204, 0);
+            z-index: 10;
+        }
+
+        .hotspot:hover {
+            background: rgba(0, 168, 204, 0.2);
+            border-color: #00a8cc;
+            box-shadow: 0 0 20px rgba(0, 168, 204, 0.4) inset;
+        }
+
+        .hotspot span {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            color: #1a1d20; /* 文字改为深色 */
+            font-weight: bold;
+            font-size: 0.9em;
+            text-shadow: 0 0 4px #fff, 0 0 4px #fff, 0 0 4px #fff; /* 白色描边保证清晰 */
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        /* ==========================================
+           地图介绍栏
+           ========================================== */
+        .map-intro {
+            max-width: 900px;
+            margin: 0 auto 40px;
+            background: #ffffff;
+            padding: 30px;
+            border-left: 5px solid #00a8cc;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+            border-top: 1px solid #e1e5eb;
+            border-right: 1px solid #e1e5eb;
+            border-bottom: 1px solid #e1e5eb;
+        }
+
+        .map-intro h2 {
+            color: #1a1d20;
+            font-size: 1.2em;
+            font-weight: 600;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+        }
+
+        .map-intro p {
+            color: #4a5568;
+            font-size: 0.95em;
+            line-height: 2;
+            margin-bottom: 10px;
+            text-align: justify;
+        }
+
+        /* ==========================================
+           弹窗：白底极简风
+           ========================================== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(18, 20, 24, 0.6); /* 半透明黑底 */
+            backdrop-filter: blur(4px);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.show { display: flex; }
+
+        .modal-box {
+            background: #ffffff;
+            border: 1px solid #e1e5eb;
+            max-width: 500px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 35px;
+            position: relative;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-box h2 {
+            color: #00a8cc;
+            font-size: 1.4em;
+            font-weight: 600;
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+            border-bottom: 2px solid #f0f2f5;
+            padding-bottom: 10px;
+        }
+
+        .modal-box p {
+            color: #4a5568;
+            line-height: 2;
+            margin-bottom: 12px;
+            font-size: 0.95em;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: #8892a0;
+            font-size: 1.8em;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .modal-close:hover { color: #1a1d20; }
+
+        /* 弹窗里的分割线 */
+        .divider-gradient { 
+            height: 1px; 
+            background: #e1e5eb; 
+            margin: 20px auto; 
+            width: 100%; 
+        }
+
+        /* ==========================================
+           底部
+           ========================================== */
+        .light-bottom {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        footer {
+            text-align: center;
+            color: #8892a0;
+            font-size: 0.85em;
+            line-height: 2;
+            padding: 20px 0 40px;
+            border-top: 1px solid #d1d9e0;
+        }
+
+        /* 手机适配 */
+        @media (max-width: 700px) {
+            .hotspot span { font-size: 0.7em; }
+            .map-intro { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 上半部分：黑底 -->
+    <div class="dark-top">
+        <header>
+            <h1>环流</h1>
+            <p>—— 国家与地貌 ——</p>
+            <a href="index.html" class="back-home">← 返回首页</a>
+        </header>
+    </div>
+
+    <!-- 地图容器 -->
+    <div class="map-wrapper" id="mapWrapper">
+        <img src="images/map.png" alt="世界地图">
+
+        <!-- 1. 瓦莱利亚 -->
+        <div class="hotspot" data-target="country1" style="top: 5%; left: 61%; width: 10%; height: 20%;">
+            <span>瓦莱利亚</span>
+        </div>
+
+        <!-- 2. 鸿熙 -->
+        <div class="hotspot" data-target="country" style="top: 30%; left: 37%; width: 20%; height: 20%;">
+            <span>鸿熙</span>
+        </div>
+
+        <!-- 3. 和辉 -->
+        <div class="hotspot" data-target="country" style="top: 50%; left: 33%; width: 15%; height: 25%;">
+            <span>和辉</span>
+        </div>
+        
+        <!-- 4. 奥斯特罗利维斯 -->
+        <div class="hotspot" data-target="country" style="top: 30%; left: 60%; width: 25%; height: 25%;">
+            <span>奥斯特罗利维斯</span>
+        </div>
+        
+        <!-- 5. 卡隆奎蒂 -->
+        <div class="hotspot" data-target="country" style="top: 5%; left: 43%; width: 20%; height: 20%;">
+            <span>卡隆奎蒂</span>
+        </div>
+        
+        <!-- 6. 阿奎拉 -->
+        <div class="hotspot" data-target="country" style="top: 15%; left: 27%; width: 15%; height: 13%;">
+            <span>阿奎拉</span>
+        </div>
+        
+        <!-- 7. 帕尔玛 -->
+        <div class="hotspot" data-target="country" style="top: 73%; left: 25%; width: 10%; height: 13%;">
+            <span>帕尔玛</span>
+        </div>
+    </div>
+    
+    <!-- 介绍栏 -->
+    <div class="map-intro">
+        <h2>地图总览</h2>
+        <p>
+            环流是平面意义上的立体存在的世界。外层是由不知名物质构建的——足以庇佑人类的——却永远无法突破的天空；内层是深不见底的海洋、不知尽头的陆地与永无止境的危害。
+        </p>
+        <p>
+            点击地图上区域，可以查看该国的详细介绍与地貌特征。
+        </p>
+    </div>
+
+    <!-- 弹窗 -->
+    <div class="modal-overlay" id="modal">
+        <div class="modal-box">
+            <button class="modal-close" id="modalClose">×</button>
+            <h2 id="modalTitle">标题</h2>
+            <div id="modalBody">内容</div>
+        </div>
+    </div>
+
+    <!-- 底部 -->
+    <div class="light-bottom">
+        <footer>
+            © 2026 【铭刻】的概念 · 保留所有权利<br><br>
+            环流，无论何时都是美丽的。<br>
+            而我对美丽的事物向来有耐心。
+        </footer>
+    </div>
+
+    <script>
+        const countryData = {
+            country1: { title: "瓦莱利亚", body: `<p>地区：弗兰斯、斯诺瓦、布雷肯、墨瑞恩、温特海姆</p><br>
+            <p>特点：地区夏季平均气温不超过17摄氏度，冬季不超过3摄氏度，常年下雨，空气潮湿。</p>
+<p>瓦莱利亚的地貌大多是平原，缺少山、林。这里有许多花草植被，被誉为“边境天堂”。</p>
+<p>瓦莱利亚北濒环流边缘地带，西邻卡隆奎蒂，位于环流外围。</p><br>
+<p>结构：政府由现任首相所属党派牵头组成。主要政府基本由家族势力和党派构成，家族与党派之间相互制衡。</p>
+<p>瓦莱利亚宗教信仰自由。</p>
+<p>流通货币为卡隆。</p>
+<p>主要种族为奈亚迪和埃瑟瑞尔。</p><br>
+<p>文化：官方语言为瓦莱利亚语。瓦莱利亚人外语水平高，尤其是阿奎拉语。受过高等教育的瓦莱利亚人基本会说3种语言。</p>
+<p>社会风气和政策相对开放，对外贸易频繁。对医药用品、同性婚姻等相关政策十分开放。</p>
+<p>瓦莱利亚人喜爱美酒，如果他们邀请你作客，大多会请你喝一杯。</p>
+<p>瓦莱利亚人更喜爱聊文化、艺术、哲学、自然、政治和旅行等话题。他们喜爱艺术品和装饰品，所以礼物可以选择漂亮的摆设赠予他们。</p>
+<p>由于临海，且瓦莱利亚的主要种族是奈亚迪，受阿奎拉影响，本土的文学作品基本和海洋、水生生物、宗教、神话等有关系。</p>
+<p>瓦莱利亚人喜爱冷餐（比如面包、奶酪），也对鸿熙美食感兴趣，可以在节假日邀请他们品尝鸿熙菜肴。</p>
+<p>瓦莱利亚拥有大量管弦乐团。</p>
+<p>有意思的是，瓦莱利亚人的平均身高是180，在环流外围的国家中排名第一。</p><br>
+<p>党派：党派是主要政府的重要组成之一，目前瓦莱利亚有四个党派。因“新卡比纳”事件的原因，党派的具体构成不被公开。</p><br>
+<p>家族：家族是主要政府的重要组成之一，目前瓦莱利亚有三大家族。因“新卡比纳”事件的原因，家族的具体构成不被公开。</p>` },
+            country2: { title: "鸿熙", body: `<p>鸿熙的介绍...</p>` },
+            country3: { title: "和辉", body: `<p>和辉的介绍...</p>` },
+            country4: { title: "奥斯特罗利维斯", body: `<p>奥斯特罗利维斯的介绍...</p>` },
+            country5: { title: "卡隆奎蒂", body: `<p>卡隆奎蒂的介绍...</p>` },
+            country6: { title: "阿奎拉", body: `<p>阿奎拉的介绍...</p>` },
+            country7: { title: "帕尔玛", body: `<p>帕尔玛的介绍...</p>` }
+        };
+
+        const modal = document.getElementById('modal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalBody = document.getElementById('modalBody');
+
+        document.querySelectorAll('.hotspot').forEach(spot => {
+            spot.addEventListener('click', () => {
+                // 这里保留了你原本的 country 判定，如果你后面要加，直接去上面的 countryData 里加就行
+                const data = countryData[spot.dataset.target];
+                if (data) {
+                    modalTitle.textContent = data.title;
+                    modalBody.innerHTML = data.body;
+                    modal.classList.add('show');
+                }
+            });
+        });
+
+        document.getElementById('modalClose').addEventListener('click', () => {
+            modal.classList.remove('show');
+        });
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) modal.classList.remove('show');
+        });
+    </script>
+
+</body>
+</html>

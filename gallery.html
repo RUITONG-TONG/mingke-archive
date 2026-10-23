@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>珍藏的图片 · 【铭刻】的存录</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            /* 整体灰白底色 */
+            background-color: #f0f2f5; 
+            font-family: "Helvetica Neue", "PingFang SC", "Microsoft YaHei", sans-serif;
+            color: #1a1d20;
+            min-height: 100vh;
+        }
+
+        /* ==========================================
+           上半部分：黑色标题区
+           ========================================== */
+        .dark-top {
+            background-color: #121418;
+            padding: 50px 20px 60px;
+            clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
+            position: relative;
+            z-index: 1;
+            border-bottom: 2px solid #00d4ff;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2em;
+            font-weight: 300;
+            color: #ffffff;
+            letter-spacing: 8px;
+            margin-bottom: 15px;
+        }
+
+        header p {
+            color: #8892a0;
+            font-size: 0.95em;
+            letter-spacing: 3px;
+            margin-bottom: 25px;
+        }
+
+        .back-home {
+            display: inline-block;
+            padding: 8px 24px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #c8d0e7;
+            text-decoration: none;
+            font-size: 0.85em;
+            letter-spacing: 2px;
+            transition: all 0.3s;
+        }
+
+        .back-home:hover {
+            background: #ffffff;
+            color: #121418;
+            border-color: #ffffff;
+        }
+
+        /* ==========================================
+           主体布局
+           ========================================== */
+        .container {
+            max-width: 1100px;
+            margin: -30px auto 40px;
+            display: flex;
+            gap: 30px;
+            align-items: flex-start;
+            position: relative;
+            z-index: 2;
+            padding: 0 20px;
+        }
+
+        /* 左侧分类列表 */
+        .category-list {
+            flex: 0 0 200px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            background: #ffffff;
+            border: 1px solid #e1e5eb;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+            position: sticky;
+            top: 20px;
+        }
+
+        .category-list h2 {
+            color: #1a1d20;
+            font-size: 1em;
+            font-weight: 600;
+            letter-spacing: 2px;
+            padding: 20px;
+            border-bottom: 1px solid #e1e5eb;
+            background: #f8fafb;
+        }
+
+        .category-btn {
+            text-align: left;
+            padding: 18px 20px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #f0f2f5;
+            color: #4a5568;
+            font-size: 0.95em;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+            position: relative;
+        }
+
+        .category-btn:hover {
+            background: #f8fafb;
+            color: #00a8cc;
+        }
+
+        .category-btn.active {
+            background: #ffffff;
+            color: #00a8cc;
+            font-weight: bold;
+        }
+        
+        .category-btn.active::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: #00a8cc;
+        }
+
+        /* 右侧图片区 */
+        .gallery-area {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .gallery-title {
+            color: #1a1d20;
+            font-size: 1.4em;
+            font-weight: 600;
+            letter-spacing: 3px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e1e5eb;
+            position: relative;
+        }
+
+        .gallery-title::before {
+            content: "";
+            display: inline-block;
+            width: 6px;
+            height: 18px;
+            background-color: #00a8cc;
+            margin-right: 12px;
+            vertical-align: text-bottom;
+        }
+
+        /* 图片网格 */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 20px;
+        }
+
+        /* 单张图片卡片 */
+        .gallery-grid img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border: 4px solid #ffffff;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            cursor: pointer;
+            transition: all 0.3s;
+            display: block;
+            background: #f8fafb;
+        }
+
+        .gallery-grid img:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 25px rgba(0, 168, 204, 0.15);
+        }
+
+        /* ==========================================
+           大图预览（全屏黑底）
+           ========================================== */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(18, 20, 24, 0.95);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            cursor: zoom-out;
+        }
+
+        .lightbox.show {
+            display: flex;
+        }
+
+        .lightbox img {
+            max-width: 95%;
+            max-height: 90vh;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            object-fit: contain;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            background: none;
+            border: none;
+            color: #8892a0;
+            font-size: 2.5em;
+            cursor: pointer;
+            line-height: 1;
+            transition: color 0.3s;
+        }
+        .lightbox-close:hover { color: #ffffff; }
+
+        /* 底部 */
+        .light-bottom {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px 40px;
+        }
+
+        footer {
+            text-align: center;
+            color: #8892a0;
+            font-size: 0.85em;
+            line-height: 2;
+            padding: 20px 0;
+            border-top: 1px solid #d1d9e0;
+        }
+
+        /* 手机适配 */
+        @media (max-width: 700px) {
+            .container {
+                flex-direction: column;
+                gap: 20px;
+                margin-top: -20px;
+            }
+
+            .category-list {
+                flex: none;
+                width: 100%;
+                position: static;
+                flex-direction: row;
+                flex-wrap: wrap;
+                background: transparent;
+                border: none;
+                box-shadow: none;
+            }
+
+            .category-list h2 {
+                display: none;
+            }
+
+            .category-btn {
+                flex: 1 1 auto;
+                text-align: center;
+                background: #ffffff;
+                border: 1px solid #e1e5eb;
+                margin-bottom: 10px;
+                border-radius: 4px;
+            }
+            
+            .category-btn.active::before {
+                width: 100%;
+                height: 3px;
+                top: auto;
+                bottom: 0;
+            }
+
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+                gap: 10px;
+            }
+
+            .gallery-grid img {
+                height: 130px;
+                border-width: 3px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 上半部黑底 -->
+    <div class="dark-top">
+        <header>
+            <h1>珍藏的图片</h1>
+            <p>—— 一些风景，一些人，一些事 ——</p>
+            <a href="index.html" class="back-home">← 返回首页</a>
+        </header>
+    </div>
+
+    <!-- 主体 -->
+    <div class="container">
+
+        <!-- 左侧分类列表 -->
+        <aside class="category-list">
+            <h2>分类</h2>
+            <button class="category-btn active" data-cat="cat1"><span style="color: #dc143c;">［未解识］</span>场景图</button>
+            <button class="category-btn" data-cat="cat2"><span style="color: #dc143c;">［未解识］</span>过场CG</button>
+            <button class="category-btn" data-cat="cat3"><span style="color: #dc143c;">［未解识］</span>概念海报</button>
+            <button class="category-btn" data-cat="cat4"><span style="color: #dc143c;">［未解识］</span>角色立绘</button>
+            <button class="category-btn" data-cat="cat5"><span style="color: #dc143c;">［未解识］</span>杂图</button>
+        </aside>
+
+        <!-- 右侧图片区 -->
+        <main class="gallery-area">
+
+            <!-- 分类一 -->
+            <section class="gallery-content" id="cat1">
+                <h2 class="gallery-title">场景图</h2>
+                <div class="gallery-grid">
+                    <img src="images/图1.png" alt="">
+                    <img src="images/图2.png" alt="">
+                    <img src="images/图3.png" alt="">
+                    <img src="images/图4.png" alt="">
+                </div>
+            </section>
+
+            <!-- 分类二 -->
+            <section class="gallery-content" id="cat2" style="display:none;">
+                <h2 class="gallery-title">过场CG</h2>
+                <div class="gallery-grid">
+                    <img src="images/立绘1.png" alt="">
+                    <img src="images/立绘2.png" alt="">
+                    <img src="images/立绘3.png" alt="">
+                </div>
+            </section>
+
+            <!-- 分类三 -->
+            <section class="gallery-content" id="cat3" style="display:none;">
+                <h2 class="gallery-title">概念海报</h2>
+                <div class="gallery-grid">
+                    <img src="images/场景1.png" alt="">
+                    <img src="images/场景2.png" alt="">
+                </div>
+            </section>
+
+            <!-- 分类四 -->
+            <section class="gallery-content" id="cat4" style="display:none;">
+                <h2 class="gallery-title">角色立绘</h2>
+                <div class="gallery-grid">
+                    <img src="images/徽记1.png" alt="">
+                    <img src="images/徽记2.png" alt="">
+                </div>
+            </section>
+
+            <!-- 分类五 -->
+            <section class="gallery-content" id="cat5" style="display:none;">
+                <h2 class="gallery-title">杂图</h2>
+                <div class="gallery-grid">
+                    <img src="images/杂图1.png" alt="">
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- 大图预览 -->
+    <div class="lightbox" id="lightbox">
+        <button class="lightbox-close" id="lightboxClose">×</button>
+        <img id="lightboxImg" src="" alt="">
+    </div>
+
+    <!-- 底部 -->
+    <div class="light-bottom">
+        <footer>
+            © 2026 【铭刻】的概念 · 保留所有权利<br><br>
+            某些你可能经历过的事情，即使过去了，也永远存在。
+        </footer>
+    </div>
+
+    <script>
+        // ====== 1. 分类切换 ======
+        const buttons = document.querySelectorAll('.category-btn');
+        const contents = document.querySelectorAll('.gallery-content');
+
+        buttons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                buttons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                const target = btn.dataset.cat;
+                contents.forEach(c => {
+                    c.style.display = (c.id === target) ? 'block' : 'none';
+                });
+
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        });
+
+        // ====== 2. 点图放大 ======
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightboxImg');
+
+        document.querySelectorAll('.gallery-grid img').forEach(img => {
+            img.addEventListener('click', () => {
+                lightboxImg.src = img.src;
+                lightbox.classList.add('show');
+            });
+        });
+
+        document.getElementById('lightboxClose').addEventListener('click', () => {
+            lightbox.classList.remove('show');
+        });
+
+        // 点背景关闭
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) lightbox.classList.remove('show');
+        });
+    </script>
+
+</body>
+</html>

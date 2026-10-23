@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>角色介绍 · 【铭刻】的存录</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            /* 整体灰白底色 */
+            background-color: #f0f2f5; 
+            font-family: "Helvetica Neue", "PingFang SC", "Microsoft YaHei", sans-serif;
+            color: #1a1d20;
+            min-height: 100vh;
+        }
+
+        /* ==========================================
+           上半部分：黑色标题区
+           ========================================== */
+        .dark-top {
+            background-color: #121418;
+            padding: 50px 20px 60px;
+            clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
+            position: relative;
+            z-index: 1;
+            border-bottom: 2px solid #00d4ff;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2em;
+            font-weight: 300;
+            color: #ffffff;
+            letter-spacing: 8px;
+            margin-bottom: 15px;
+        }
+
+        header p {
+            color: #8892a0;
+            font-size: 0.95em;
+            letter-spacing: 3px;
+            margin-bottom: 25px;
+        }
+
+        .back-home {
+            display: inline-block;
+            padding: 8px 24px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #c8d0e7;
+            text-decoration: none;
+            font-size: 0.85em;
+            letter-spacing: 2px;
+            transition: all 0.3s;
+        }
+
+        .back-home:hover {
+            background: #ffffff;
+            color: #121418;
+            border-color: #ffffff;
+        }
+
+        /* ==========================================
+           主体布局：左列表 + 右内容
+           ========================================== */
+        .container {
+            max-width: 1100px;
+            margin: -30px auto 40px; /* 向上提，压住黑色边缘 */
+            display: flex;
+            gap: 30px;
+            align-items: flex-start;
+            position: relative;
+            z-index: 2;
+            padding: 0 20px;
+        }
+
+        /* 左侧国家列表：极简标签风格 */
+        .country-list {
+            flex: 0 0 200px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            background: #ffffff;
+            border: 1px solid #e1e5eb;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+            position: sticky;
+            top: 20px;
+        }
+
+        .country-list h2 {
+            color: #1a1d20;
+            font-size: 1em;
+            font-weight: 600;
+            letter-spacing: 2px;
+            padding: 20px;
+            border-bottom: 1px solid #e1e5eb;
+            background: #f8fafb;
+        }
+
+        .country-btn {
+            text-align: left;
+            padding: 18px 20px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #f0f2f5;
+            color: #4a5568;
+            font-size: 0.95em;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+            position: relative;
+        }
+
+        .country-btn:hover {
+            background: #f8fafb;
+            color: #00a8cc;
+        }
+
+        /* 选中的按钮：左侧出现一道青蓝线 */
+        .country-btn.active {
+            background: #ffffff;
+            color: #00a8cc;
+            font-weight: bold;
+        }
+        
+        .country-btn.active::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: #00a8cc;
+        }
+
+        /* 右侧角色展示区 */
+        .character-area {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .country-title {
+            color: #1a1d20;
+            font-size: 1.4em;
+            font-weight: 600;
+            letter-spacing: 3px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e1e5eb;
+            position: relative;
+        }
+
+        /* 标题左侧的青蓝小方块 */
+        .country-title::before {
+            content: "";
+            display: inline-block;
+            width: 6px;
+            height: 18px;
+            background-color: #00a8cc;
+            margin-right: 12px;
+            vertical-align: text-bottom;
+        }
+
+        .character-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        /* 单个角色卡片：纯白画廊风 */
+        .character-card {
+            background: #ffffff;
+            border: 1px solid #e1e5eb;
+            overflow: hidden;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+        }
+
+        .character-card:hover {
+            transform: translateY(-5px);
+            border-color: #00a8cc;
+            box-shadow: 0 12px 25px rgba(0, 168, 204, 0.15);
+        }
+
+        .character-card img {
+            width: 100%;
+            height: 240px;
+            object-fit: cover;
+            display: block;
+            border-bottom: 1px solid #e1e5eb;
+            filter: contrast(105%);
+            transition: filter 0.3s;
+        }
+
+        .character-card:hover img {
+            filter: contrast(110%) brightness(1.05);
+        }
+
+        .character-card .info {
+            padding: 20px 15px;
+            text-align: center;
+        }
+
+        .character-card h3 {
+            color: #1a1d20;
+            font-size: 1.05em;
+            font-weight: 600;
+            letter-spacing: 1px;
+            transition: color 0.3s;
+        }
+
+        .character-card:hover h3 {
+            color: #00a8cc;
+        }
+
+        /* 底部 */
+        .light-bottom {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px 40px;
+        }
+
+        footer {
+            text-align: center;
+            color: #8892a0;
+            font-size: 0.85em;
+            line-height: 2;
+            padding: 20px 0;
+            border-top: 1px solid #d1d9e0;
+        }
+
+        /* 手机适配 */
+        @media (max-width: 700px) {
+            .container {
+                flex-direction: column;
+                gap: 20px;
+                margin-top: -20px;
+            }
+
+            .country-list {
+                flex: none;
+                width: 100%;
+                position: static;
+                flex-direction: row;
+                flex-wrap: wrap;
+                background: transparent;
+                border: none;
+                box-shadow: none;
+            }
+
+            .country-list h2 {
+                display: none;
+            }
+
+            .country-btn {
+                flex: 1 1 auto;
+                text-align: center;
+                background: #ffffff;
+                border: 1px solid #e1e5eb;
+                margin-bottom: 10px;
+                border-radius: 4px;
+            }
+            
+            .country-btn.active::before {
+                width: 100%;
+                height: 3px;
+                top: auto;
+                bottom: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 上半部黑底 -->
+    <div class="dark-top">
+        <header>
+            <h1>角色介绍</h1>
+            <p>—— 各个国家的居民们 ——</p>
+            <a href="index.html" class="back-home">← 返回首页</a>
+        </header>
+    </div>
+
+    <!-- 主体内容 -->
+    <div class="container">
+
+        <!-- 左侧：国家列表 -->
+        <aside class="country-list">
+            <h2>国家选择</h2>
+            <button class="country-btn active" data-country="country1">瓦莱利亚</button>
+            <button class="country-btn" data-country="country2"><span style="color: #dc143c;">［未解识］</span>鸿熙</button>
+            <button class="country-btn" data-country="country3"><span style="color: #dc143c;">［未解识］</span>和辉</button>
+            <button class="country-btn" data-country="country4"><span style="color: #dc143c;">［未解识］</span>帕尔玛</button>
+        </aside>
+
+        <!-- 右侧：角色展示 -->
+        <main class="character-area">
+
+            <!-- 国家一 -->
+            <section class="country-content" id="country1">
+                <h2 class="country-title">瓦莱利亚</h2>
+                <div class="character-grid">
+
+                    <!-- 角色卡片 -->
+                    <a href="characters-profile/Samuel Aconite.html" style="text-decoration: none; display: block;">
+                        <div class="character-card">
+                            <img src="images/塞缪尔.png" alt="塞缪尔">
+                            <div class="info">
+                                <h3>塞缪尔·艾柯尼特</h3>
+                            </div>
+                        </div>
+                    </a>
+
+                </div>
+            </section>
+
+            <!-- 其他国家的占位（隐藏） -->
+            <section class="country-content" id="country2" style="display:none;"></section>
+            <section class="country-content" id="country3" style="display:none;"></section>
+            <section class="country-content" id="country4" style="display:none;"></section>
+
+        </main>
+    </div>
+
+    <!-- 底部版权 -->
+    <div class="light-bottom">
+        <footer>
+            © 2026 【铭刻】的概念 · 保留所有权利<br><br>
+            那些人们，在为生而死。<br>
+            我对此没有意见，毕竟我只是一个记录员。
+        </footer>
+    </div>
+
+    <!-- 切换逻辑 -->
+    <script>
+        const buttons = document.querySelectorAll('.country-btn');
+        const contents = document.querySelectorAll('.country-content');
+
+        buttons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // 1. 按钮高亮切换
+                buttons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // 2. 显示对应内容，隐藏其他
+                const target = btn.dataset.country;
+                contents.forEach(c => {
+                    c.style.display = (c.id === target) ? 'block' : 'none';
+                });
+
+                // 3. 手机上切换后滚回顶部
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        });
+    </script>
+
+</body>
+</html>

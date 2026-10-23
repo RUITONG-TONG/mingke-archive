@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>时间线与世界线 · 【铭刻】的存录</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            /* 整体灰白底色 */
+            background-color: #f0f2f5; 
+            font-family: "Helvetica Neue", "PingFang SC", "Microsoft YaHei", sans-serif;
+            color: #1a1d20;
+            min-height: 100vh;
+        }
+
+        /* ==========================================
+           上半部分：黑色标题区
+           ========================================== */
+        .dark-top {
+            background-color: #121418;
+            padding: 50px 20px 60px;
+            clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
+            position: relative;
+            z-index: 1;
+            border-bottom: 2px solid #00d4ff;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2em;
+            font-weight: 300;
+            color: #ffffff;
+            letter-spacing: 8px;
+            margin-bottom: 15px;
+        }
+
+        header p {
+            color: #8892a0;
+            font-size: 0.95em;
+            letter-spacing: 3px;
+            margin-bottom: 25px;
+        }
+
+        .back-home {
+            display: inline-block;
+            padding: 8px 24px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #c8d0e7;
+            text-decoration: none;
+            font-size: 0.85em;
+            letter-spacing: 2px;
+            transition: all 0.3s;
+        }
+
+        .back-home:hover {
+            background: #ffffff;
+            color: #121418;
+            border-color: #ffffff;
+        }
+
+        /* ==========================================
+           主体区域
+           ========================================== */
+        .section {
+            max-width: 1000px;
+            margin: 0 auto 40px;
+            position: relative;
+            z-index: 2;
+            padding: 0 20px;
+        }
+
+        /* 第一个区域向上提，压住黑边 */
+        .section:first-of-type {
+            margin-top: -30px;
+        }
+
+        .section-title {
+            color: #1a1d20;
+            font-size: 1.4em;
+            font-weight: 600;
+            letter-spacing: 3px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e1e5eb;
+            position: relative;
+        }
+
+        .section-title::before {
+            content: "";
+            display: inline-block;
+            width: 6px;
+            height: 18px;
+            background-color: #00a8cc;
+            margin-right: 12px;
+            vertical-align: text-bottom;
+        }
+
+        /* ==========================================
+           1. 时间线
+           ========================================== */
+        .timeline-scroll {
+            overflow-x: auto;
+            background: #ffffff;
+            border: 1px solid #e1e5eb;
+            padding: 40px 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .timeline-scroll::-webkit-scrollbar { height: 6px; }
+        .timeline-scroll::-webkit-scrollbar-thumb { background: #d1d9e0; }
+
+        .timeline {
+            display: flex;
+            align-items: center;
+            position: relative;
+            min-width: max-content;
+            padding: 0 50px;
+        }
+
+        /* 时间轴主线（灰色细线） */
+        .timeline::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #e1e5eb;
+            transform: translateY(-50%);
+        }
+
+        /* 单个时间节点 */
+        .event {
+            position: relative;
+            flex: 0 0 auto;
+            width: 160px;
+            text-align: center;
+            cursor: pointer;
+            padding: 0 10px;
+        }
+
+        /* 圆点（实心深灰） */
+        .event::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 12px;
+            height: 12px;
+            background: #1a1d20;
+            border: 3px solid #ffffff; /* 白边切断时间线 */
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: all 0.3s;
+            z-index: 2;
+        }
+
+        .event:hover::after {
+            background: #00a8cc;
+            transform: translate(-50%, -50%) scale(1.3);
+        }
+
+        /* 事件名（上方） */
+        .event .event-name {
+            position: absolute;
+            bottom: 50%;
+            left: 50%;
+            transform: translate(-50%, -15px);
+            color: #1a1d20;
+            font-size: 0.95em;
+            font-weight: 600;
+            letter-spacing: 1px;
+            white-space: nowrap;
+            transition: all 0.3s;
+        }
+
+        .event:hover .event-name { color: #00a8cc; }
+
+        /* 年份（下方） */
+        .event .event-year {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, 15px);
+            color: #8892a0;
+            font-size: 0.8em;
+            white-space: nowrap;
+        }
+
+        /* 上下交错 */
+        .event.up .event-name {
+            bottom: auto; top: 50%;
+            transform: translate(-50%, 15px);
+        }
+        .event.up .event-year {
+            top: auto; bottom: 50%;
+            transform: translate(-50%, -15px);
+        }
+
+        /* ==========================================
+           2. 大事记
+           ========================================== */
+        .chronicle-list {
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        /* 左侧竖向引导线 */
+        .chronicle-list::before {
+            content: "";
+            position: absolute;
+            left: 70px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #e1e5eb;
+        }
+
+        .chronicle-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 30px;
+            padding: 15px 0;
+            position: relative;
+        }
+
+        /* 年份 */
+        .chronicle-item .chron-year {
+            flex: 0 0 60px;
+            text-align: right;
+            color: #00a8cc;
+            font-size: 0.95em;
+            font-weight: bold;
+            letter-spacing: 1px;
+            padding-top: 15px;
+        }
+
+        /* 节点圆点 */
+        .chronicle-item::before {
+            content: "";
+            position: absolute;
+            left: 65px;
+            top: 24px;
+            width: 10px;
+            height: 10px;
+            background: #00a8cc;
+            border: 2px solid #f0f2f5; /* 切断引导线 */
+            border-radius: 50%;
+            transition: all 0.3s;
+            z-index: 2;
+        }
+
+        /* 右侧内容卡片 */
+        .chronicle-item .chron-content {
+            flex: 1;
+            background: #ffffff;
+            border: 1px solid #e1e5eb;
+            padding: 20px 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+            transition: all 0.3s;
+        }
+
+        .chronicle-item:hover .chron-content {
+            border-color: #00a8cc;
+            transform: translateX(6px);
+            box-shadow: 0 8px 25px rgba(0, 168, 204, 0.08);
+        }
+
+        .chronicle-item .chron-content h3 {
+            color: #1a1d20;
+            font-size: 1.05em;
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .chronicle-item .chron-content p {
+            color: #4a5568;
+            font-size: 0.95em;
+            line-height: 1.8;
+        }
+
+        /* ==========================================
+           3. 世界线列表
+           ========================================== */
+        .worldline-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .worldline-item {
+            background: #ffffff;
+            border: 1px solid #e1e5eb;
+            border-left: 4px solid #00a8cc;
+            padding: 25px 30px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+        }
+
+        .worldline-item:hover {
+            border-color: #00a8cc;
+            transform: translateX(6px);
+            box-shadow: 0 10px 30px rgba(0, 168, 204, 0.08);
+        }
+
+        .worldline-item h3 {
+            color: #1a1d20;
+            font-size: 1.15em;
+            font-weight: 600;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* 编号标记 */
+        .worldline-item h3::before {
+            content: attr(data-index);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 26px;
+            height: 26px;
+            border: 1px solid #00a8cc;
+            border-radius: 50%;
+            font-size: 0.8em;
+            color: #00a8cc;
+            flex: 0 0 auto;
+            font-weight: normal;
+        }
+
+        .worldline-item p {
+            color: #4a5568;
+            line-height: 1.9;
+            font-size: 0.95em;
+            text-align: justify;
+        }
+
+        /* ==========================================
+           弹窗
+           ========================================== */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(18, 20, 24, 0.6); backdrop-filter: blur(4px);
+            z-index: 100; justify-content: center; align-items: center; padding: 20px;
+        }
+        .modal-overlay.show { display: flex; }
+        .modal-box {
+            background: #ffffff; border: 1px solid #e1e5eb;
+            max-width: 500px; width: 100%; max-height: 80vh; overflow-y: auto;
+            padding: 35px; position: relative; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+        }
+        .modal-box h2 { color: #1a1d20; font-size: 1.4em; font-weight: 600; margin-bottom: 8px; letter-spacing: 2px; }
+        .modal-box .modal-year { color: #00a8cc; font-size: 0.9em; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #e1e5eb; }
+        .modal-box p { color: #4a5568; line-height: 2; margin-bottom: 12px; font-size: 0.95em; text-align: justify; }
+        .modal-close { position: absolute; top: 15px; right: 20px; background: none; border: none; color: #8892a0; font-size: 1.8em; cursor: pointer; transition: color 0.3s; }
+        .modal-close:hover { color: #1a1d20; }
+
+        /* 底部 */
+        .light-bottom {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        footer {
+            text-align: center;
+            padding: 20px 0 40px;
+            color: #8892a0;
+            font-size: 0.85em;
+            line-height: 2;
+            border-top: 1px solid #d1d9e0;
+        }
+
+        /* 手机适配 */
+        @media (max-width: 700px) {
+            .event { width: 130px; }
+            .event .event-name { font-size: 0.85em; }
+            .chronicle-list { padding-left: 0; }
+            .chronicle-list::before { left: 60px; }
+            .chronicle-item { gap: 20px; }
+            .chronicle-item .chron-year { flex: 0 0 50px; font-size: 0.85em; }
+            .chronicle-item::before { left: 55px; }
+            .chronicle-item .chron-content { padding: 15px; }
+            .worldline-item { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 上半部黑底 -->
+    <div class="dark-top">
+        <header>
+            <h1>时间线与世界线</h1>
+            <p>—— 过去与未来，现实与存在 ——</p>
+            <a href="index.html" class="back-home">← 返回首页</a>
+        </header>
+    </div>
+
+    <!-- ============ 时间线 ============ -->
+    <section class="section">
+        <h2 class="section-title">时间线</h2>
+
+        <div class="timeline-scroll">
+            <div class="timeline">
+                <div class="event" data-event="e1">
+                    <div class="event-name">荒芜之年</div>
+                    <div class="event-year">前世纪（未知）~101年</div>
+                </div>
+                <div class="event up" data-event="e2">
+                    <div class="event-name">纷乱之年</div>
+                    <div class="event-year">前世纪102年~1709年</div>
+                </div>
+                <div class="event" data-event="e3">
+                    <div class="event-name">旧时代</div>
+                    <div class="event-year">前世纪1710年~后世纪214年</div>
+                </div>
+                <div class="event up" data-event="e4">
+                    <div class="event-name">新时代</div>
+                    <div class="event-year">后世纪215年~至今</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ 大事记 ============ -->
+    <section class="section">
+        <h2 class="section-title">大事记</h2>
+
+        <div class="chronicle-list">
+            <div class="chronicle-item">
+                <div class="chron-year">前世纪103年~至今</div>
+                <div class="chron-content">
+                    <h3>源于【死亡】的组织的建立与开放</h3>
+                    <p>【死亡】的概念于前世纪103年建立这个组织，于后世纪216年开放。</p>
+                </div>
+            </div>
+
+            <div class="chronicle-item">
+                <div class="chron-year">前世纪103年~1709年</div>
+                <div class="chron-content">
+                    <h3>席卷环流的【战争】</h3>
+                    <p>恐怖的那一位，银白角，疯态，利齿，如巨人般。即为【战争】的弥锋，灾难的源头。</p>
+                </div>
+            </div>
+
+            <div class="chronicle-item">
+                <div class="chron-year">后世纪209年1月5日~218年1月5日</div>
+                <div class="chron-content">
+                    <h3>瓦莱利亚-【时间】的紊乱</h3>
+                    <p>源自斯诺瓦的代表家族艾柯尼特，【时间】的概念介入导致。</p>
+                </div>
+            </div>
+
+            <div class="chronicle-item">
+                <div class="chron-year">后世纪224年</div>
+                <div class="chron-content">
+                    <h3>【死亡】崩裂</h3>
+                    <p>他所遇见的未来，是此时此刻的溃烂。</p>
+                </div>
+            </div>
+
+            <div class="chronicle-item">
+                <div class="chron-year">前世纪（未知）~至今</div>
+                <div class="chron-content">
+                    <h3>你所见的故事</h3>
+                    <p>你，作为【命运】的诞生。<span style="color: #00a8cc; display: block; margin-top: 8px;">我清楚，你不知自己从何而来，我的老朋友。但我仍想为你记下这一笔。</span></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ 世界线列表 ============ -->
+    <section class="section">
+        <h2 class="section-title">世界线</h2>
+
+        <div class="worldline-list">
+            <div class="worldline-item">
+                <h3 data-index="1">主世界线</h3>
+                <p>就像一个棵独苗，你什么都不做，它也依然在成长。</p>
+            </div>
+
+            <div class="worldline-item">
+                <h3 data-index="2"><span style="color: #dc143c; font-size: 0.8em; border: 1px solid #dc143c; padding: 2px 6px; margin-right: 5px;">［未解识］</span>平行世界线 · 定位反转</h3>
+                <p>？？？</p>
+            </div>
+
+            <div class="worldline-item">
+                <h3 data-index="3">平行世界线 · 【苦厄】的温床</h3>
+                <p>时与空的极度紊乱。</p>
+            </div>
+
+            <div class="worldline-item">
+                <h3 data-index="4"><span style="color: #dc143c; font-size: 0.8em; border: 1px solid #dc143c; padding: 2px 6px; margin-right: 5px;">［未解识］</span>平行世界线 · 妄想极乐</h3>
+                <p>？？？</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 弹窗 -->
+    <div class="modal-overlay" id="modal">
+        <div class="modal-box">
+            <button class="modal-close" id="modalClose">×</button>
+            <h2 id="modalTitle">标题</h2>
+            <div class="modal-year" id="modalYear">年份</div>
+            <div id="modalBody">内容</div>
+        </div>
+    </div>
+
+    <!-- 底部 -->
+    <div class="light-bottom">
+        <footer>
+            © 2026 【铭刻】的概念 · 保留所有权利<br><br>
+            “时与空”是个怪人，无论是【时间】还是【空间】都是。
+        </footer>
+    </div>
+
+    <script>
+        const eventData = {
+            e1: {
+                title: "荒芜之年",
+                year: "前世纪（未知）~101年",
+                body: `
+                    <p>原初的世界，智慧之繁衍。</p>
+                    <p>【白昼】的生长伴随【黑夜】的诞生。其为荒芜之年。</p>
+                `
+            },
+            e2: {
+                title: "纷乱之年",
+                year: "前世纪102年~1709年",
+                body: `
+                    <p>【生迹】溃烂，【死亡】横生。</p>
+                    <p>人类之所欲，助其【战争】的新生。其为纷乱之年。</p>
+                `
+            },
+            e3: {
+                title: "旧时代",
+                year: "前世纪1710年~后世纪214年",
+                body: `
+                    <p>【战争】的枯萎。</p>
+                    <p>人类目光所及，新启【财富】与【信仰】之道。其为人类的旧时代。</p>
+                `
+            },
+            e4: {
+                title: "新时代",
+                year: "后世纪215年~至今",
+                body: `
+                    <p>时代的新生。</p>
+                    <p>其为人类的新时代。</p>
+                `
+            },
+        };
+
+        const modal = document.getElementById('modal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalYear = document.getElementById('modalYear');
+        const modalBody = document.getElementById('modalBody');
+
+        document.querySelectorAll('.event').forEach(ev => {
+            ev.addEventListener('click', () => {
+                const data = eventData[ev.dataset.event];
+                if (data) {
+                    modalTitle.textContent = data.title;
+                    modalYear.textContent = data.year;
+                    modalBody.innerHTML = data.body;
+                    modal.classList.add('show');
+                }
+            });
+        });
+
+        document.getElementById('modalClose').addEventListener('click', () => {
+            modal.classList.remove('show');
+        });
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) modal.classList.remove('show');
+        });
+    </script>
+
+</body>
+</html>
