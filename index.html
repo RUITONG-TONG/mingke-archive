@@ -166,6 +166,15 @@
             max-width: 800px;
             margin: 0 auto;
         }
+        
+        .nav-icon {
+    width: 18px;  /* 图标大小，可以调 */
+    height: 18px;
+    object-fit: contain;
+    margin-right: 8px; /* 图标和文字的间距 */
+    vertical-align: middle; /* 垂直居中对齐文字 */
+    margin-top: -2px; /* 稍微往上提一点点，视觉更平齐 */
+}
     </style>
 </head>
 <body>
@@ -193,13 +202,13 @@
 
         <!-- 页面跳转导航 -->
         <nav class="nav">
-            <a href="characters.html">角色介绍</a>
-            <a href="races.html">种族</a>
-            <a href="circulation.html">环流</a>
-            <a href="timeline.html">时间线与世界线</a>
-            <a href="factions.html">势力与阵营</a>
-            <a href="gallery.html">珍藏的图片</a>
-            <a href="about me.html">关于【铭刻】</a>
+            <a href="characters.html"><img src="images/角色.png" class="nav-icon" alt=""> 角色介绍</a>
+            <a href="races.html"><img src="images/种族.png" class="nav-icon" alt="">种族</a>
+            <a href="circulation.html"><img src="images/环流.png" class="nav-icon" alt="">环流</a>
+            <a href="timeline.html"><img src="images/时空.png" class="nav-icon" alt="">时间线与世界线</a>
+            <a href="factions.html"><img src="images/势力.png" class="nav-icon" alt="">势力与阵营</a>
+            <a href="gallery.html"><img src="images/图片.png" class="nav-icon" alt="">珍藏的图片</a>
+            <a href="about me.html"><img src="images/关于我.png" class="nav-icon" alt="">关于【铭刻】</a>
         </nav>
 
         <footer>

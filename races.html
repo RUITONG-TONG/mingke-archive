@@ -90,19 +90,31 @@
         }
 
         .race-btn {
-            text-align: left;
-            padding: 16px 20px;
-            background: transparent;
-            border: none;
-            border-bottom: 1px solid #f0f2f5;
-            color: #4a5568;
-            font-size: 0.95em;
-            letter-spacing: 1px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-family: inherit;
-            position: relative;
-        }
+    text-align: left;
+    padding: 18px 22px;
+    background: none;
+    border: none;
+    border-left: 4px solid transparent;
+    color: #000000;
+    font-size: 0.95em;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-family: inherit;
+    
+    /* 新增的布局代码 */
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* 新增：按钮内的图片图标样式 */
+.btn-icon {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+    flex-shrink: 0; 
+}
 
         .race-btn:hover {
             background: #f8fafb;
@@ -263,20 +275,20 @@
 
         <!-- 左侧：种族名 -->
         <aside class="race-list">
-            <button class="race-btn active" data-race="race1">人类</button>
-            <button class="race-btn" data-race="race2">埃瑟瑞尔</button>
-            <button class="race-btn" data-race="race3">埃布利尔</button>
-            <button class="race-btn" data-race="race4">奈克莫瓦</button>
-            <button class="race-btn" data-race="race5">赫希</button>
-            <button class="race-btn" data-race="race6">鲁纳</button>
-            <button class="race-btn" data-race="race7">奈亚迪</button>
-            <button class="race-btn" data-race="race8">利那瑞</button>
-            <button class="race-btn" data-race="race9">沃伦威尔</button>
-            <button class="race-btn" data-race="race10">维斯佩拉</button>
-            <button class="race-btn" data-race="race11">尼色雷斯</button>
-            <button class="race-btn" data-race="race12">诺克希</button>
-            <button class="race-btn" data-race="race13">米尔希</button>
-            <button class="race-btn" data-race="race14">希尔萨里</button>
+            <button class="race-btn active" data-race="race1"><img src="images/人类.png" class="btn-icon" alt=""> <span>人类</span></button>
+            <button class="race-btn" data-race="race2"><img src="images/埃瑟瑞尔.png" class="btn-icon" alt=""> <span>埃瑟瑞尔</span></button>
+            <button class="race-btn" data-race="race3"><img src="images/埃布利尔.png" class="btn-icon" alt=""> <span>埃布利尔</span></button>
+            <button class="race-btn" data-race="race4"><img src="images/人类.png" class="btn-icon" alt=""> <span>奈克莫瓦</span></button>
+            <button class="race-btn" data-race="race5"><img src="images/赫希.png" class="btn-icon" alt=""> <span>赫希</span></button>
+            <button class="race-btn" data-race="race6"><img src="images/鲁纳.png" class="btn-icon" alt=""> <span>鲁纳</span></button>
+            <button class="race-btn" data-race="race7"><img src="images/奈亚迪.png" class="btn-icon" alt=""> <span>奈亚迪</span></button>
+            <button class="race-btn" data-race="race8"><img src="images/利那瑞.png" class="btn-icon" alt=""> <span>利那瑞</span></button>
+            <button class="race-btn" data-race="race9"><img src="images/沃伦威尔.png" class="btn-icon" alt=""> <span>沃伦威尔</span></button>
+            <button class="race-btn" data-race="race10"><img src="images/维斯佩拉.png" class="btn-icon" alt=""> <span>维斯佩拉</span></button>
+            <button class="race-btn" data-race="race11"><img src="images/尼色雷斯.png" class="btn-icon" alt=""> <span>尼色雷斯</span></button>
+            <button class="race-btn" data-race="race12"><img src="images/诺克希.png" class="btn-icon" alt=""> <span>诺克希</span></button>
+            <button class="race-btn" data-race="race13"><img src="images/米尔希.png" class="btn-icon" alt=""> <span>米尔希</span></button>
+            <button class="race-btn" data-race="race14"><img src="images/希尔萨里.png" class="btn-icon" alt=""> <span>希尔萨里</span></button>
         </aside>
 
         <!-- 右侧：种族介绍 -->
